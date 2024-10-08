@@ -1,0 +1,15 @@
+.navigation {
+    @apply h-fit max-xl:w-[300px] inline-flex max-xl:flex-col gap-5 flex-row w-fit;
+}
+
+.default {
+    @apply text-center font-normal;
+}
+
+.active {
+    @apply font-semibold;
+}
+
+.medium {
+    @apply text-base;
+}

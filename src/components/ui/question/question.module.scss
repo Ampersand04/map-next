@@ -1,0 +1,35 @@
+.quastions {
+    @apply bg-gray text-text py-6 px-8 rounded-lg;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.default {
+}
+
+.active {
+    margin-bottom: 10px;
+}
+
+.medium {
+    font-size: 20px;
+}
+
+.question {
+    @apply flex flex-row justify-between font-semibold;
+}
+
+.answer {
+    display: none;
+    transition: all 0.3s;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.activeAnswer {
+    @apply text-lg text-text-secondary mt-3;
+    display: block;
+    opacity: 1;
+    transition: all 0.3s;
+}

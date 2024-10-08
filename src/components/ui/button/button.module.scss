@@ -1,0 +1,83 @@
+.button {
+    @apply inline-flex items-center justify-center h-fit rounded-lg font-medium transition-colors;
+}
+
+.primary {
+    @apply border-none text-white font-semibold;
+
+    &:hover {
+        background: rgba(3, 194, 255, 1);
+    }
+    &:active {
+        background: rgba(0, 185, 244, 1);
+    }
+    background: rgba(0, 185, 244, 1);
+}
+
+.secondary {
+    @apply border border-white text-white font-normal;
+
+    &:hover {
+        color: rgba(0, 194, 255, 1);
+        border-color: rgba(0, 194, 255, 1);
+    }
+    &:active {
+        color: rgba(166, 220, 238, 1);
+        border-color: rgba(166, 220, 238, 1);
+    }
+}
+
+.redirect {
+    @apply bg-transparent text-blue-main font-semibold transition-all duration-100 border-none flex gap-3;
+
+    &:hover {
+        @apply bg-blue-100 gap-10;
+
+        // img {
+        //     @apply transition-transform translate-x-2.5 duration-100;
+        //     // transform: translateX(10px);
+        // }
+    }
+}
+
+.google {
+    @apply border-none flex flex-row gap-2 bg-gray text-text;
+
+    &:hover {
+        @apply bg-[#CAE6FF];
+    }
+}
+
+.ghost {
+    @apply bg-slate-200/10 border-none hover:bg-slate-200/20;
+}
+
+.small {
+    @apply px-3 py-1.5 text-sm;
+}
+
+.medium {
+    @apply px-6 py-3 text-base;
+}
+
+.full {
+    @apply py-3 text-base min-w-full;
+}
+
+.normal {
+    @apply border;
+}
+
+.inactive {
+    @apply border border-transparent hover:border-transparent cursor-not-allowed;
+
+    &:hover {
+        color: inherit;
+        background: rgba(166, 183, 198, 1);
+    }
+    &:active {
+        color: inherit;
+        background: rgba(166, 183, 198, 1);
+    }
+    background: rgba(166, 183, 198, 1);
+}

@@ -1,26 +1,44 @@
 {
-  "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
+    "compilerOptions": {
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+
+        "jsx": "preserve",
+        "incremental": true,
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ],
+        "typeRoots": ["./types", "./node_modules/@types", "./node_modules/@yandex/ymaps3-types"],
+        "paths": {
+            "@/*": ["./src/*"],
+            "ymaps3": ["./node_modules/@yandex/ymaps3-types"]
+        }
+    },
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        ".next/types/**/*.ts",
+        "src/components/ui/index.js",
+        "src/components/ui/navItem/index.js",
+        "src/components/auth/index.jss",
+        "src/components/service/CMap.jsx",
+        "src/app/(service)/service/page.jsx",
+        "src/utils/queryClientProviderWrapper.tsz",
+        "src/app/api/auth/[...nextauth]/route.ts",
+        "src/app/api/auth/route.js",
+        "src/components/auth/role-gate.tsz",
+        "src/components/dashboard/dashboard-objects-columns.data.tsz"
     ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+    "exclude": ["node_modules"]
 }

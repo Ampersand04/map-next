@@ -1,0 +1,16 @@
+.mapBlock {
+    @apply relative overflow-hidden w-full h-[100vh] bg-blue-main;
+}
+
+.content {
+    @apply flex flex-col gap-6 z-10 items-center justify-center;
+}
+
+.primery {
+    .content {
+        @apply hidden;
+    }
+}
+
+.secondery {
+}

@@ -1,0 +1,7 @@
+.form {
+    @apply flex flex-col gap-4;
+}
+
+.default {
+    @apply bg-white rounded-3xl;
+}

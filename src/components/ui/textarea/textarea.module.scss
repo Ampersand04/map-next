@@ -1,0 +1,58 @@
+.textareaWrapper {
+    position: relative;
+}
+
+.textarea {
+    width: 100%;
+    padding: 20px 20px 12px 20px;
+    overflow: hidden;
+
+    font-size: 16px;
+    background-color: #f5f9ff;
+    color: #323e55;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    &::placeholder {
+        visibility: hidden;
+    }
+}
+
+.textarea.error {
+    @apply border border-text-error;
+}
+
+.textarea.error:focus {
+    @apply border border-text-error;
+}
+
+.textarea:focus {
+    border-color: #a6dcee;
+}
+
+.label {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    transform: translateY(-50%);
+    color: #637593;
+    pointer-events: none;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.textarea:focus + .label,
+.filled + .label {
+    top: 10px;
+    font-size: 10px;
+}
+
+.errorMessage {
+    @apply text-text-error text-[12px] w-fit flex flex-row gap-1 ml-[6px] mt-[6px] mb-[-8px];
+}
+
+.filled {
+    border-color: #a6dcee;
+}

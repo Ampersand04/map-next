@@ -1,0 +1,300 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  MANAGER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified DateTime? @map(name: "email_verified")
+  image         String
+  password      String?
+  role          Role      @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  accounts Account[]
+  // Objects  Object[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  sessionState      String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id])
+
+  @@id([provider, providerAccountId])
+}
+
+model Object {
+  id         String     @id @default(cuid())
+  name       String?
+  type       ObjectType
+  isArchived Boolean    @default(false)
+
+  yearOfConstruction DateTime?
+  gpsCoordinates     String?
+  address            String?
+  completionRate     Int?
+
+  technicalDetails          Json
+  structuralCharacteristics StructuralCharacteristics?
+  additionalInformation     AdditionalInformation?
+  createdAt                 DateTime                   @default(now())
+  updatedAt                 DateTime                   @updatedAt
+
+  creatorId String
+}
+
+enum ObjectType {
+  INDUSTRIAL
+  RESIDENTIAL
+}
+
+// model Review {
+//   id                 Int       @id @default(autoincrement())
+//   yearOfConstruction DateTime?
+
+//   serviceLife             Int?
+//   timeToTheEndServiceLife Int?
+//   residualValue           Int?
+//   objectId                String? @unique
+//   object                  Object? @relation(fields: [objectId], references: [id])
+// }
+
+// model TechnicalDetails {
+//   id                  Int                   @id @default(autoincrement())
+//   industrialProperty  IndustrialProperty[]
+//   residentialProperty ResidentialProperty[]
+//   objectID            String                @unique
+//   object              Object                @relation(fields: [objectID], references: [id])
+// }
+
+// model IndustrialProperty {
+//   id                    Int              @id @default(autoincrement())
+//   yearOfConstruction    DateTime
+//   yearOfReconstruction  DateTime
+//   physicalDeterioration Int
+//   constructionVolume    Float
+//   externalArea          Float
+//   totalArea             Float
+//   normedArea            Float
+//   floorAboveGround      Int
+//   floorOfUnderground    Int
+//   numberOfParkingPlaces Int
+//   areaOfParkingSpaces   Float
+//   specificationID       Int
+//   specifications        TechnicalDetails @relation(fields: [specificationID], references: [id])
+// }
+
+// model ResidentialProperty {
+//   id                                 Int              @id @default(autoincrement())
+//   yearOfConstruction                 DateTime
+//   yearOfReconstruction               DateTime
+//   physicalDeterioration              Int
+//   constructionVolume                 Float
+//   externalArea                       Float
+//   totalArea                          Float
+//   floorAboveGround                   Int
+//   floorOfUnderground                 Int
+//   nonResidentialIsolatedPremises     Int
+//   standardizedAreaOfIsolatedPremises Float
+//   residentialIsolatedPremises        Int
+//   livingArea                         Float
+//   areaOfResidentialPremises          Float
+//   AreaBalconiesNoCoefficients        Float
+//   AreaBalconiesCoefficients          Float
+//   numberOfParkingPlaces              Int
+//   areaOfParkingSpaces                Float
+//   specificationID                    Int
+//   specifications                     TechnicalDetails @relation(fields: [specificationID], references: [id])
+// }
+
+model StructuralCharacteristics {
+  id                 Int                  @id @default(autoincrement())
+  foundations        Foundations[]
+  exteriorWalls      ExteriorWalls[]
+  internalWalls      InternalWalls[]
+  partitions         Partitions[]
+  overlaps           Overlaps[]
+  covering           Covering[]
+  roofing            Roofing[]
+  floors             Floors[]
+  windows            Windows[]
+  doors              Doors[]
+  gates              Gates[]
+  finishingWorks     FinishingWorks[]
+  engineeringSystems EngineeringSystems[]
+  objectID           String?              @unique
+  object             Object?              @relation(fields: [objectID], references: [id])
+}
+
+model Foundations {
+  id                          Int                       @id @default(autoincrement())
+  material                    String?
+  constructionType            String?
+  structuralCharacteristicsID Int
+  structuralCharacteristics   StructuralCharacteristics @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model ExteriorWalls {
+  id                          Int                        @id @default(autoincrement())
+  wallType                    String?
+  material                    String?
+  wallThickness               Float?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model InternalWalls {
+  id                          Int                        @id @default(autoincrement())
+  wallType                    String?
+  material                    String?
+  wallThickness               Float?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model Partitions {
+  id                          Int                        @id @default(autoincrement())
+  purpose                     String?
+  material                    String?
+  wallThickness               Float?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model Overlaps {
+  id                          Int                        @id @default(autoincrement())
+  typeOfConstruction          String?
+  material                    String?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model Covering {
+  id                          Int                        @id @default(autoincrement())
+  typeOfConstruction          String?
+  material                    String?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model Roofing {
+  id                          Int                        @id @default(autoincrement())
+  type                        String?
+  coveringMaterial            String?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model Floors {
+  id                          Int                        @id @default(autoincrement())
+  covering                    String?
+  floorConstruction           String?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model Windows {
+  id                          Int                        @id @default(autoincrement())
+  construction                String?
+  number                      Int?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model Doors {
+  id                          Int                        @id @default(autoincrement())
+  purpose                     String?
+  material                    String?
+  quantity                    Int?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model Gates {
+  id                          Int                        @id @default(autoincrement())
+  type                        String?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model FinishingWorks {
+  id                          Int                        @id @default(autoincrement())
+  exteriorWall                String?
+  InteriorWall                String?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model EngineeringSystems {
+  id                          Int                        @id @default(autoincrement())
+  heating                     String?
+  coldWater                   Boolean?
+  hotWater                    Boolean?
+  sewerage                    Boolean?
+  electricity                 Boolean?
+  gas                         Boolean?
+  ventilation                 Boolean?
+  airConditioning             Boolean?
+  alarmSystem                 Boolean?
+  videoSurveillance           Boolean?
+  elevators                   Boolean?
+  other                       String?
+  structuralCharacteristicsID Int?
+  structuralCharacteristics   StructuralCharacteristics? @relation(fields: [structuralCharacteristicsID], references: [id])
+}
+
+model AdditionalInformation {
+  id                             Int              @id @default(autoincrement())
+  technicalPassport              String?
+  technicalOperation             Bytes?
+  datesOfRepairs                 DatesOfRepairs[]
+  DocumentsTechnologicalLoads    Bytes? //Documents characterizing actual technological loads and impacts and their changes during operation;
+  DocumentsParametersEnvironment Bytes? // Documents characterizing the parameters of the environment in which the building structures are operated;
+  MaterialsSurveyOrganizations   Bytes? // Materials of survey organizations about hydrogeological situation on the construction site and adjacent territories. Groundwater regime control data;
+  PassportsBoilerElevator        Bytes? // Passports of boiler and elevator facilities, crane equipment; Schemes of water supply, sewerage, heat, gas and electricity supply systems, grounding circuits;
+  AnnualObject                   Bytes? // Annual object and consolidated plans-schedules of works to ensure operational reliability of all facilities of the enterprise.
+  ActsOfTechnical                Bytes? // Acts of technical (general (spring, fall) scheduled, partially scheduled, unscheduled) inspections of the facility
+  objectID                       String?          @unique
+  object                         Object?          @relation(fields: [objectID], references: [id])
+}
+
+model DatesOfRepairs {
+  id                      Int                   @id @default(autoincrement())
+  date                    DateTime
+  typeOfWork              String
+  workVolume              Float
+  cost                    Float
+  AdditionalInformationID Int
+  additionalInformation   AdditionalInformation @relation(fields: [AdditionalInformationID], references: [id])
+}
