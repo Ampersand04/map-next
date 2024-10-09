@@ -1,22 +1,47 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useContext, useCallback, useState } from 'react';
 import {
     YMap,
     YMapMarker,
     YMapDefaultSchemeLayer,
     YMapDefaultFeaturesLayer,
     YMapComponentsProvider,
-    YMapDefaultMarker,
     YMapCustomClusterer,
-    // ...other components
+    YMapDefaultMarker,
 } from 'ymap3-components';
-import { location as LOCATION, features, apiKey, points } from './helpers';
+import { apiKey } from './helpers';
+import { ObjectContext } from '@/providers/objectsProvider';
+import SidePanel from '../application/sidePanel/SidePanel';
 
 const CMap = () => {
+    const objects = useContext(ObjectContext); // Использование контекста
+    const [selectedObjectId, setSelectedObjectId] = useState(null); // Состояние для ID выбранного объекта
+
+    // Преобразуем данные объектов в точки для карты
+    const points = objects
+        ?.filter((item) => item.gpsCoordinates !== null)
+        ?.map((item) => {
+            const [latitude, longitude] = item.gpsCoordinates.split(',').map(Number); // Извлекаем координаты
+            return {
+                type: 'Feature',
+                id: String(item.id),
+                geometry: {
+                    type: 'Point',
+                    coordinates: [longitude, latitude], // Меняем местами широту и долготу
+                },
+            };
+        });
+
     const marker = useCallback(
-        (feature) => <YMapDefaultMarker coordinates={feature.geometry.coordinates} />,
+        (feature) => (
+            <YMapDefaultMarker
+                coordinates={feature.geometry.coordinates}
+                onClick={() => setSelectedObjectId(feature.id)} // Установка выбранного объекта
+            />
+        ),
         [],
     );
 
+    console.log(points);
     const cluster = useCallback(
         (coordinates, features) => (
             <YMapMarker coordinates={coordinates}>
@@ -39,18 +64,12 @@ const CMap = () => {
         ),
         [],
     );
-    const ymap3Ref = useRef();
-    console.log('API Key:', process.env.REACT_APP_YMAP_KEY);
+
     const location = { center: [23.685098, 52.093756], zoom: 14.5 };
+
     return (
         <YMapComponentsProvider apiKey={apiKey}>
-            <YMap
-                key="map"
-                ref={ymap3Ref}
-                location={location}
-                mode="vector"
-                // theme="dark"
-            >
+            <YMap key="map" location={location} mode="vector">
                 <YMapCustomClusterer
                     marker={marker}
                     cluster={cluster}
@@ -59,8 +78,10 @@ const CMap = () => {
                 />
                 <YMapDefaultSchemeLayer />
                 <YMapDefaultFeaturesLayer />
-                {/* <YMapDefaultMarker coordinates={LOCATION.center} /> */}
-                {/* <YMapDefaultMarker coordinates={[37.95, 55.65]} /> */}
+                <SidePanel
+                    selectedObjectId={selectedObjectId}
+                    onClose={() => setSelectedObjectId(null)} // Закрытие боковой панели
+                />
             </YMap>
         </YMapComponentsProvider>
     );

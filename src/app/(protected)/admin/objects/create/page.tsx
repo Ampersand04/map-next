@@ -19,7 +19,7 @@ const CreateObjectPage: React.FC = () => {
         yearOfConstruction: '',
         gpsCoordinates: '',
         address: '',
-        completionRate: 0,
+        completionRate: null,
         structuralCharacteristics: undefined,
         additionalInformation: undefined,
     });

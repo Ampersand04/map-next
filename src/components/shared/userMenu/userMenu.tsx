@@ -13,7 +13,6 @@ const UserMenu: React.FC = () => {
     const toggleDropdown = () => {
         setDropdownOpen(!isDropdownOpen);
     };
-    console.log('user ' + user);
 
     if (loading) {
         return <div className="text-text">Loading...</div>; // Show a loading state while user data is being fetched

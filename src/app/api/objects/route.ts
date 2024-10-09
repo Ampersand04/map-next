@@ -4,7 +4,18 @@ import { auth } from '@/auth';
 
 export async function GET() {
     try {
-        const objects = await prisma.object.findMany();
+        const objects = await prisma.object.findMany({
+            select: {
+                id: true,
+                name: true,
+                gpsCoordinates: true,
+                // Добавьте другие поля, которые вам нужны
+                yearOfConstruction: true,
+                completionRate: true,
+                isArchived: true,
+                address: true,
+            },
+        });
 
         console.log(objects);
         return NextResponse.json(objects, { status: 200 });
