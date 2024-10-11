@@ -1,7 +1,7 @@
 /**
  * An array of public Routes
  */
-export const publicRoutes = ['/', '/api/objects', '/admin/objects/create'];
+export const publicRoutes = ['/'];
 
 export const authRoutes = ['/auth/login', '/auth/register'];
 

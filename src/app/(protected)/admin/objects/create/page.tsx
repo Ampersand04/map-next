@@ -5,6 +5,19 @@ import DashboardAside from '@/components/dashboard/dashboard-aside';
 import { useRouter } from 'next/navigation';
 import { object } from 'zod';
 
+interface FormData {
+    type: string;
+    name: string;
+    technicalDetails?: string;
+    yearOfConstruction: string;
+    gpsCoordinates: string;
+    address: string;
+    completionRate: number | null;
+    structuralCharacteristics?: string;
+    additionalInformation?: string;
+    images: File[];
+}
+
 // Dummy data for aside menu (You can adjust this)
 const menu = [
     { title: 'Create Object', pageUrl: '/admin/objects/create' },
@@ -12,7 +25,7 @@ const menu = [
 ];
 
 const CreateObjectPage: React.FC = () => {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         type: '',
         name: '',
         technicalDetails: undefined,
@@ -22,6 +35,7 @@ const CreateObjectPage: React.FC = () => {
         completionRate: null,
         structuralCharacteristics: undefined,
         additionalInformation: undefined,
+        images: [],
     });
 
     const router = useRouter();
@@ -29,19 +43,38 @@ const CreateObjectPage: React.FC = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({
             ...formData,
+            completionRate: formData.completionRate ? Number(formData.completionRate) : null,
             [e.target.name]: e.target.value,
         });
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files) {
+            setFormData({
+                ...formData,
+                completionRate: formData.completionRate ? Number(formData.completionRate) : null,
+                images: Array.from(files), // Преобразование FileList в массив
+            });
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const data = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                value.forEach((file) => data.append(`${key}[]`, file));
+            } else {
+                data.append(key, value as string);
+            }
+        });
+
         try {
             const res = await fetch('/api/objects', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+                body: data, // Отправляем FormData вместо JSON
             });
 
             if (res.ok) {
@@ -117,9 +150,10 @@ const CreateObjectPage: React.FC = () => {
                         <label className="block text-sm font-medium text-gray-700">
                             completionRate
                         </label>
-                        <textarea
+                        <input
+                            type="number"
                             name="completionRate"
-                            value={formData.completionRate}
+                            value={formData.completionRate || ''}
                             onChange={handleChange}
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         />
@@ -170,6 +204,17 @@ const CreateObjectPage: React.FC = () => {
                             name="additionalInformation"
                             value={formData.additionalInformation}
                             onChange={handleChange}
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Images</label>
+                        <input
+                            type="file"
+                            name="images"
+                            onChange={handleFileChange}
+                            multiple // Разрешаем загрузку нескольких файлов
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         />
                     </div>

@@ -27,12 +27,14 @@ model User {
   image         String
   password      String?
   role          Role      @default(USER)
+  premium       Boolean?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   accounts Account[]
   // Objects  Object[]
+  Object   Object[]
 }
 
 model Account {
@@ -64,6 +66,7 @@ model Object {
   gpsCoordinates     String?
   address            String?
   completionRate     Int?
+  images             String[]
 
   technicalDetails          Json
   structuralCharacteristics StructuralCharacteristics?
@@ -72,6 +75,8 @@ model Object {
   updatedAt                 DateTime                   @updatedAt
 
   creatorId String
+
+  creator User @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 }
 
 enum ObjectType {

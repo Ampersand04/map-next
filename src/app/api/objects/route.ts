@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+import { v2 as cloudinary } from 'cloudinary';
+import { Readable } from 'stream';
 
 export async function GET() {
     try {
@@ -8,6 +10,8 @@ export async function GET() {
             select: {
                 id: true,
                 name: true,
+                type: true,
+                images: true,
                 gpsCoordinates: true,
                 // Добавьте другие поля, которые вам нужны
                 yearOfConstruction: true,
@@ -17,13 +21,18 @@ export async function GET() {
             },
         });
 
-        console.log(objects);
         return NextResponse.json(objects, { status: 200 });
     } catch (error) {
         console.error('Error fetching objects:', error);
         return NextResponse.json({ error: 'Error fetching objects' }, { status: 500 });
     }
 }
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req: Request) {
     try {
@@ -36,8 +45,46 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const data = await req.json();
+        const formData = await req.formData(); // Используйте formData для получения файлов
 
+        const data: any = {}; // Объект для хранения данных формы
+        formData.forEach((value, key) => {
+            if (key === 'images[]') {
+                // Если это изображения, сохраняем их в массив
+                data.images = data.images || [];
+                data.images.push(value);
+            } else {
+                data[key] = value;
+            }
+        });
+
+        // Функция для загрузки изображения в Cloudinary
+        const uploadImage = (file: File) => {
+            return new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: 'your-folder-name' },
+                    (error, result) => {
+                        if (error) {
+                            return reject(error);
+                        }
+                        resolve(result.secure_url); // Возвращаем URL загруженного изображения
+                    },
+                );
+
+                // Создаем ReadableStream из объекта File
+                const readableStream = Readable.from(file.stream());
+                readableStream.pipe(stream); // Пайпим поток в upload_stream
+            });
+        };
+
+        // Загрузка изображений
+        const imageUrls = await Promise.all(
+            data.images.map(async (file: File) => {
+                return await uploadImage(file);
+            }),
+        );
+
+        // Создание объекта в базе данных
         const object = await prisma.object.create({
             data: {
                 type: data.type,
@@ -45,18 +92,39 @@ export async function POST(req: Request) {
                 yearOfConstruction: data.yearOfConstruction,
                 gpsCoordinates: data.gpsCoordinates,
                 address: data.address,
-                completionRate: data.completionRate,
+                completionRate: parseInt(data.completionRate, 10),
                 technicalDetails: data.technicalDetails,
-                structuralCharacteristics: data.structuralCharacteristics,
-                additionalInformation: data.additionalInformation,
+                structuralCharacteristics: undefined,
+                additionalInformation: undefined,
                 creatorId,
+                images: imageUrls, // Сохраните URL-адреса загруженных изображений
             },
         });
 
-        // Return the created object as JSON
+        // Вернуть созданный объект как JSON
         return NextResponse.json(object, { status: 201 });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Error creating object' }, { status: 500 });
+    }
+}
+
+export async function DELETE(req: Request) {
+    try {
+        const { id } = await req.json(); // Извлекаем id из запроса
+
+        // Проверка на наличие id и его тип
+        if (!id || typeof id !== 'string') {
+            return NextResponse.json({ error: 'Invalid id provided' }, { status: 400 });
+        }
+
+        const deletedObject = await prisma.object.delete({
+            where: { id },
+        });
+
+        return NextResponse.json(deletedObject, { status: 200 });
+    } catch (error) {
+        console.error('Error deleting object:', error);
+        return NextResponse.json({ error: 'Error deleting object' }, { status: 500 });
     }
 }

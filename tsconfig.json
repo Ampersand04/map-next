@@ -32,7 +32,7 @@
         "src/components/ui/index.js",
         "src/components/ui/navItem/index.js",
         "src/components/auth/index.jss",
-        "src/components/service/CMap.jsx",
+        "src/components/service/CMap.tsx",
         "src/app/(service)/service/page.jsx",
         "src/utils/queryClientProviderWrapper.tsz",
         "src/app/api/auth/[...nextauth]/route.ts",

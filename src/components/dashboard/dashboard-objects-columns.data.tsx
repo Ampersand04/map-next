@@ -1,22 +1,33 @@
 'use client';
-
-import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 import Image from 'next/image';
+import { ColumnType } from 'antd/es/table'; // Импортируем необходимые типы из Ant Design
+import { useRouter } from 'next/navigation';
+import ActionButtons from './ActionButtons';
 
-export const columns = [
+// Определяем интерфейс для данных строки
+interface ObjectData {
+    id: string;
+    yearOfConstruction: string | Date; // В зависимости от вашего источника данных
+    status: boolean;
+    name: string;
+    type: string;
+    address: string;
+    completionRate: number;
+}
+
+export const columns: ColumnType<ObjectData>[] = [
     {
-        title: 'Год постойки объекта',
+        title: 'Год постройки объекта',
         dataIndex: 'yearOfConstruction',
         key: 'yearOfConstruction',
-        sorter: (a: any, b: any) =>
+        sorter: (a, b) =>
             new Date(a.yearOfConstruction).getTime() - new Date(b.yearOfConstruction).getTime(),
     },
     {
         title: 'Статус',
         dataIndex: 'status',
         key: 'status',
-        render: (status: string) => (
+        render: (status: boolean) => (
             <span className={status ? 'text-red-500' : 'text-green-500'}>
                 {status ? 'В архиве' : 'Опубликован'}
             </span>
@@ -38,36 +49,18 @@ export const columns = [
         key: 'address',
     },
     {
-        title: 'Год постройки',
-        dataIndex: 'yearOfConstruction',
-        key: 'yearOfConstruction',
-        render: (yearOfConstruction: Date) => {
-            yearOfConstruction ? (
-                <div className="flex gap-2">
-                    <Image src={'/iconamoon_edit.svg'} alt="" width={16} height={16} />
-                    <Image src={'/symbols_delete.svg'} alt="" width={16} height={16} />
-                </div>
-            ) : (
-                'asd'
-            );
-        },
-        sorter: (a: any, b: any) => a.yearOfConstruction - b.yearOfConstruction,
-    },
-    {
         title: 'Готовность (%)',
         dataIndex: 'completionRate',
         key: 'completionRate',
-        sorter: (a: any, b: any) => a.completionRate - b.completionRate,
+        sorter: (a, b) => a.completionRate - b.completionRate,
     },
-    {
-        title: '',
-        key: 'actions',
-        fixed: 'right',
-        render: () => (
-            <div className="flex gap-2">
-                <Image src={'/iconamoon_edit.svg'} alt="" width={16} height={16} />
-                <Image src={'/symbols_delete.svg'} alt="" width={16} height={16} />
-            </div>
-        ),
-    },
+    // {
+    //     title: '',
+    //     key: 'actions',
+    //     fixed: 'right' as const,
+    //     render: (record: ObjectData) => (
+    //         // console.log('Rendering actions for ID:', record.id); // Выводим ID для отладки
+    //         <ActionButtons objectId={record.id} />
+    //     ),
+    // },
 ];

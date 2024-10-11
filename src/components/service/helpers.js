@@ -79,7 +79,7 @@ export const features = [
     },
 ];
 
-export const location = { center: [52.093756, 23.685098], zoom: 7.5 };
+export const location = { center: [23.685098, 52.093756], zoom: 14.5 };
 // apikey is only for codesandbox.io and xk3d74.csb.app
 export const apiKey = '533aacc8-4a41-4e0d-b61a-c0a660b652ee';
 

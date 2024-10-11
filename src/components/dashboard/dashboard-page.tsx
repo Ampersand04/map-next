@@ -3,6 +3,7 @@
 import DashboardInputSearch from './dashboardInputSearch';
 import { useState } from 'react';
 import { Button } from '../ui';
+import Link from 'next/link';
 
 interface DashboardPageProps {
     pageName?: string;
@@ -37,9 +38,11 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
                 <h2 className="text-xl font-bold">{pageName}</h2>
                 <div className="flex justify-between items-center gap-2">
                     <DashboardInputSearch value={searchValue} onChange={handleSearchChange} />
-                    <Button intent="primary" size="small" className="text-3xl">
-                        Создать
-                    </Button>
+                    <Link href="/admin/objects/create">
+                        <Button intent="primary" size="small" className="text-3xl">
+                            Создать
+                        </Button>
+                    </Link>
                 </div>
             </div>
 

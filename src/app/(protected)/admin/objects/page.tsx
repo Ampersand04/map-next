@@ -1,5 +1,6 @@
 'use client';
 
+import ActionButtons from '@/components/dashboard/ActionButtons';
 import DashboardAside from '@/components/dashboard/dashboard-aside';
 import { columns } from '@/components/dashboard/dashboard-objects-columns.data';
 import DashboardPage from '@/components/dashboard/dashboard-page';
@@ -17,13 +18,14 @@ const ObjectPage: React.FC = () => {
     const fetchObjects = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/objects'); // Запрос к нашему API-роуту
+            const response = await fetch('/api/objects');
             if (!response.ok) {
                 throw new Error('Failed to fetch objects');
             }
 
             const data = await response.json();
             const formattedData = data.map((object: any) => ({
+                id: object.id,
                 yearOfConstruction: object.yearOfConstruction,
                 status: object.isArchived,
                 name: object.name,
@@ -46,6 +48,10 @@ const ObjectPage: React.FC = () => {
         fetchObjects(currentPage, pageSize);
     }, [currentPage, pageSize]);
 
+    const handleDelete = (id: string) => {
+        setDataSource((prevData) => prevData.filter((item) => item.id !== id));
+        setTotalItems((prevTotal) => prevTotal - 1); // Обновляем общее количество
+    };
     const handlePageChange = (page: number, pageSize: number) => {
         setCurrentPage(page);
         setPageSize(pageSize);
@@ -55,9 +61,20 @@ const ObjectPage: React.FC = () => {
         <DashboardPage pageName="Объекты">
             <div className="w-full overflow-auto bg-admin-bg">
                 <Table
+                    rowKey="id"
                     loading={loading}
                     dataSource={dataSource}
-                    columns={columns}
+                    columns={[
+                        ...columns,
+                        {
+                            title: '',
+                            key: 'actions',
+                            fixed: 'right',
+                            render: (record) => (
+                                <ActionButtons objectId={record.id} onDelete={handleDelete} />
+                            ),
+                        },
+                    ]}
                     pagination={false}
                     scroll={{
                         x: 'max-content',
