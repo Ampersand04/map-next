@@ -68,22 +68,33 @@ const UserMenu: React.FC = () => {
                     </div>
                     <div className="flex flex-col items-stretch gap-4 p-4 text-sm">
                         {/* General Menu Items */}
-                        <div className="menu-item flex items-center justify-between hover:cursor-pointer">
-                            <div className="flex items-center gap-[8px]">
-                                <Image src="/settings.svg" alt="" width={24} height={24} />
-
-                                <h5 className="text-gray-700 font-semibold">Настройки</h5>
-                            </div>
-                            <Image src="/user-right-arrow.svg" alt="" width={12} height={12} />
-                        </div>
-                        {!isAdmin && !isManager && (
+                        <Link href={'/404'}>
                             <div className="menu-item flex items-center justify-between hover:cursor-pointer">
                                 <div className="flex items-center gap-[8px]">
-                                    <Image src="/premium.svg" alt="" width={24} height={24} />
-                                    <h5 className="text-gray-700 font-semibold">Premium-доступ</h5>
+                                    <Image src="/settings.svg" alt="" width={24} height={24} />
+
+                                    <h5 className="text-gray-700 font-semibold">Настройки</h5>
                                 </div>
                                 <Image src="/user-right-arrow.svg" alt="" width={12} height={12} />
                             </div>
+                        </Link>
+                        {!isAdmin && !isManager && (
+                            <Link href={'/404'}>
+                                <div className="menu-item flex items-center justify-between hover:cursor-pointer">
+                                    <div className="flex items-center gap-[8px]">
+                                        <Image src="/premium.svg" alt="" width={24} height={24} />
+                                        <h5 className="text-gray-700 font-semibold">
+                                            Premium-доступ
+                                        </h5>
+                                    </div>
+                                    <Image
+                                        src="/user-right-arrow.svg"
+                                        alt=""
+                                        width={12}
+                                        height={12}
+                                    />
+                                </div>
+                            </Link>
                         )}
 
                         {/* Role-Specific Items */}

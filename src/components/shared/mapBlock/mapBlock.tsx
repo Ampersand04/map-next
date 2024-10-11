@@ -6,6 +6,7 @@ import { Body1, Body1accent, Heading1, Heading2 } from '@/components/ui/heading'
 import { PropsWithChildren } from 'react';
 import { Container } from '../container';
 import { classNames } from '@/utils/combineClasses';
+import Link from 'next/link';
 
 interface mapBlockProps {
     intent?: 'primary' | 'secondary';
@@ -63,7 +64,9 @@ const MapBlock: React.FC<PropsWithChildren<mapBlockProps>> = ({
                                     <Body1accent>городов</Body1accent>
                                 </div>
                             </div>
-                            <Button intent="primary">Перейти в приложение</Button>
+                            <Link href={'service'}>
+                                <Button intent="primary">Перейти в приложение</Button>
+                            </Link>
                         </div>
 
                         {/* SHADOWS */}

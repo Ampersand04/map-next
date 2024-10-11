@@ -31,7 +31,7 @@ const AboutBlock: React.FC<Props> = () => {
                             эксплуатационно-технических паспортах и планах работ. Начните
                             пользоваться картой прямо сейчас с вашего смартфона или компьютера.
                         </Body1>
-                        <Button href="/login" intent="redirect">
+                        <Button href="/auth/login" intent="redirect">
                             Получить доступ к карте
                         </Button>
 
