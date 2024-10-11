@@ -1,7 +1,8 @@
-export interface User {
+export interface Manager {
     id: string;
     name: string;
     email: string;
-    premium: boolean;
+    phoneNumber: string;
+    status: boolean;
     createdAt: string;
 }

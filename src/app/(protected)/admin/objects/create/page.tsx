@@ -15,7 +15,7 @@ interface FormData {
     completionRate: number | null;
     structuralCharacteristics?: string;
     additionalInformation?: string;
-    images: File[];
+    image: File[];
 }
 
 // Dummy data for aside menu (You can adjust this)
@@ -35,7 +35,7 @@ const CreateObjectPage: React.FC = () => {
         completionRate: null,
         structuralCharacteristics: undefined,
         additionalInformation: undefined,
-        images: [],
+        image: [],
     });
 
     const router = useRouter();
@@ -54,7 +54,7 @@ const CreateObjectPage: React.FC = () => {
             setFormData({
                 ...formData,
                 completionRate: formData.completionRate ? Number(formData.completionRate) : null,
-                images: Array.from(files), // Преобразование FileList в массив
+                image: Array.from(files), // Преобразование FileList в массив
             });
         }
     };
@@ -212,7 +212,7 @@ const CreateObjectPage: React.FC = () => {
                         <label className="block text-sm font-medium text-gray-700">Images</label>
                         <input
                             type="file"
-                            name="images"
+                            name="image"
                             onChange={handleFileChange}
                             multiple // Разрешаем загрузку нескольких файлов
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"

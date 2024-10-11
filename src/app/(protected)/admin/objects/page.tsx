@@ -58,7 +58,7 @@ const ObjectPage: React.FC = () => {
     };
     return (
         // <div className="flex justify-center bg-admin-bg p-2 w-full h-full">
-        <DashboardPage pageName="Объекты">
+        <DashboardPage pageName="Объекты" tableData={dataSource} createLink="/admin/objects/create">
             <div className="w-full overflow-auto bg-admin-bg">
                 <Table
                     rowKey="id"

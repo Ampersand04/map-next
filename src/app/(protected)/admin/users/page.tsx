@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { User } from '@/components/dashboard/user.iterface';
-import ActionButtons from '@/components/dashboard/ActionButtons';
 import DashboardPage from '@/components/dashboard/dashboard-page';
+import UserActionButtons from '@/components/dashboard/UserActionButtons';
 
 const UsersPage = () => {
     const [dataSource, setDataSource] = useState<User[]>([]);
@@ -23,7 +23,7 @@ const UsersPage = () => {
                     id: user.id,
                     name: user.name,
                     email: user.email,
-                    status: user.status,
+                    premium: user.premium,
                     createdAt: user.createdAt,
                 }));
 
@@ -54,12 +54,12 @@ const UsersPage = () => {
             key: 'email',
         },
         {
-            title: 'Статус',
-            dataIndex: 'status',
-            key: 'status',
-            render: (status: boolean) => (
-                <span className={status ? 'text-red-500' : 'text-green-500'}>
-                    {status ? 'Заблокирован' : 'Активный'}
+            title: 'Premium',
+            dataIndex: 'premium',
+            key: 'premium',
+            render: (premium: boolean) => (
+                <span className={premium ? 'text-green-500' : 'text-red-500'}>
+                    {premium ? 'Активный' : 'Не активен'}
                 </span>
             ),
         },
@@ -73,13 +73,16 @@ const UsersPage = () => {
             key: 'actions',
             fixed: 'right' as const,
             render: (record: User) => (
-                <ActionButtons objectId={record.id} onDelete={handleDelete} />
+                <UserActionButtons objectId={record.id} onDelete={handleDelete} />
             ),
         },
     ];
 
     return (
-        <DashboardPage pageName="Пользователи">
+        <DashboardPage
+            pageName="Пользователи"
+            tableData={dataSource}
+            createLink="/admin/users/create">
             <div className="w-full overflow-auto bg-admin-bg">
                 <Table
                     columns={columns}
