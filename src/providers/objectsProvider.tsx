@@ -30,18 +30,18 @@ export const ObjectProvider = ({ children }: { children: React.ReactNode }) => {
     const [objects, setObjects] = useState<ObjectData[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
+    const fetchObjects = async () => {
+        setLoading(true); // Устанавливаем состояние загрузки
+        try {
+            const response = await axios.get('/api/objects');
+            setObjects(response.data);
+        } catch (error) {
+            console.error('Error fetching objects:', error);
+        } finally {
+            setLoading(false); // Отключаем загрузку после получения данных
+        }
+    };
     useEffect(() => {
-        const fetchObjects = async () => {
-            setLoading(true); // Устанавливаем состояние загрузки
-            try {
-                const response = await axios.get('/api/objects');
-                setObjects(response.data);
-            } catch (error) {
-                console.error('Error fetching objects:', error);
-            } finally {
-                setLoading(false); // Отключаем загрузку после получения данных
-            }
-        };
         fetchObjects();
     }, []);
 

@@ -1,19 +1,42 @@
 'use client';
 import Header from '@/components/application/header/header';
-import CMap from '@/components/service/CMap';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation'; // Импортируйте useRouter из next/navigation
 import { ObjectProvider } from '@/providers/objectsProvider';
-import React from 'react';
+import CMap from '@/components/service/CMap';
+import SidePanel from '@/components/application/sidePanel/SidePanel';
 
 export default function Service() {
+    const router = useRouter();
+    const [selectedObjectId, setSelectedObjectId] = useState(null);
+    const [isPanelOpen, setIsPanelOpen] = useState(false); // Состояние для боковой панели
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const objectId = urlParams.get('open'); // Получаем параметр open из URL
+
+        if (selectedObjectId) {
+            setSelectedObjectId(objectId); // Устанавливаем ID объекта, если он есть
+            setIsPanelOpen(true); // Открываем боковую панель, если объект был передан в URL
+            console.log('Opening object with ID:', objectId);
+        }
+    }, [router]);
+
     return (
         <div className="h-[100vh]">
-            <Header />
+            <Header
+                setSelectedObjectId={setSelectedObjectId} // Передаем функцию для установки выбранного объекта
+                setIsPanelOpen={setIsPanelOpen} // Передаем функцию для открытия боковой панели
+            />
             <ObjectProvider>
                 <CMap
-                    // center={[37.623082, 55.75254]}
-                    // zoom={9}
-                    // width={'full'}
                     height={'full'}
+                    selectedObjectId={selectedObjectId}
+                    setSelectedObjectId={setSelectedObjectId}
+                />
+                <SidePanel
+                    selectedObjectId={selectedObjectId}
+                    onClose={() => setSelectedObjectId(null)}
                 />
             </ObjectProvider>
         </div>

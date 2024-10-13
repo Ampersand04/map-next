@@ -23,6 +23,7 @@ interface SidePanelProps {
 }
 
 const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose }) => {
+    const [currentSlide, setCurrentSlide] = useState(0);
     const { objects } = useContext(ObjectContext); // Получаем данные из контекста
     const selectedObject = objects.find((obj: ObjectData) => obj.id === selectedObjectId); // Находим выбранный объект
 
@@ -39,7 +40,6 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose }) => {
     };
 
     // Слайдер изображений
-    const [currentSlide, setCurrentSlide] = useState(0);
     const images = selectedObject.images || ['/default-image.png']; // Используем дефолтное изображение, если нет картинок
 
     const handlePrevSlide = () => {
@@ -71,28 +71,32 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose }) => {
                 </div>
 
                 {/* Слайдер изображений */}
-                <div className="flex items-center flex-col gap-3 w-full">
+                <div className="flex items-center flex-col w-full gap-3">
                     {/* Текущее изображение */}
-                    <div className="bg-text h-[220px] w-full flex items-center justify-center relative">
+                    <div className="bg-text h-[220px] w-full flex items-center justify-center relative rounded-lg overflow-hidden">
                         <Image
-                            src={images[currentSlide]}
+                            src={images[currentSlide] || '/default-image.png'}
                             alt={`Image ${currentSlide + 1}`}
                             layout="fill"
                             objectFit="cover"
                             className="rounded-md"
                         />
                         {/* Кнопка предыдущего слайда */}
-                        <button
-                            className="absolute left-2 bg-gray-200 hover:bg-gray-300 p-2 rounded-full"
-                            onClick={handlePrevSlide}>
-                            ◀
-                        </button>
-                        {/* Кнопка следующего слайда */}
-                        <button
-                            className="absolute right-2 bg-gray-200 hover:bg-gray-300 p-2 rounded-full"
-                            onClick={handleNextSlide}>
-                            ▶
-                        </button>
+
+                        {selectedObject.images.length !== 0 && (
+                            <div>
+                                <button
+                                    className="absolute left-2 bg-gray-200 hover:bg-gray-300 p-2 rounded-full"
+                                    onClick={handlePrevSlide}>
+                                    ◀
+                                </button>
+                                <button
+                                    className="absolute right-2 bg-gray-200 hover:bg-gray-300 p-2 rounded-full"
+                                    onClick={handleNextSlide}>
+                                    ▶
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     {/* Индикаторы слайдов */}
@@ -100,8 +104,13 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose }) => {
                         {images.map((_, index) => (
                             <div
                                 key={index}
+                                onClick={() => {
+                                    setCurrentSlide(index);
+                                }}
                                 className={`h-2 w-2 rounded-md ${
-                                    currentSlide === index ? 'bg-blue-500' : 'bg-gray-400'
+                                    currentSlide === index
+                                        ? 'bg-text-secondary'
+                                        : 'bg-gray-secondary'
                                 }`}
                             />
                         ))}
@@ -129,6 +138,49 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose }) => {
                                     content={selectedObject.yearOfConstruction || 'Нет данных'}
                                 />
 
+                                <DefaultContentLine
+                                    name="Адрес"
+                                    content={selectedObject.address || 'Нет данных'}
+                                />
+
+                                <DefaultContentLine
+                                    name="Координаты"
+                                    content={selectedObject.gpsCoordinates || 'Нет данных'}
+                                />
+
+                                <DefaultContentLine
+                                    name="Процент готовности объекта"
+                                    content={selectedObject.completionRate || 'Нет данных'}
+                                />
+                            </div>
+                        }
+                    />
+
+                    <Accordion
+                        title="Технические характеристики"
+                        content={
+                            <div className="flex flex-col gap-2.5">
+                                <DefaultContentLine
+                                    name="Адрес"
+                                    content={selectedObject.address || 'Нет данных'}
+                                />
+
+                                <DefaultContentLine
+                                    name="Координаты"
+                                    content={selectedObject.gpsCoordinates || 'Нет данных'}
+                                />
+
+                                <DefaultContentLine
+                                    name="Процент готовности объекта"
+                                    content={selectedObject.completionRate || 'Нет данных'}
+                                />
+                            </div>
+                        }
+                    />
+                    <Accordion
+                        title="Конструктивные характеристики"
+                        content={
+                            <div className="flex flex-col gap-2.5">
                                 <DefaultContentLine
                                     name="Адрес"
                                     content={selectedObject.address || 'Нет данных'}

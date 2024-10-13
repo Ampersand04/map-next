@@ -23,9 +23,8 @@ interface ObjectData {
     name?: string;
 }
 
-const CMap = () => {
+const CMap = ({ setSelectedObjectId }: { setSelectedObjectId: any }) => {
     const { objects, loading } = useContext(ObjectContext);
-    const [selectedObjectId, setSelectedObjectId] = useState(null);
     const [markerActive, setMarkerActive] = useState(false);
 
     // Преобразуем данные объектов в точки для карты
@@ -116,10 +115,6 @@ const CMap = () => {
                 <YMapDefaultSchemeLayer />
                 <YMapDefaultFeaturesLayer />
                 <YMapListener onClick={onMouseClick} />
-                <SidePanel
-                    selectedObjectId={selectedObjectId}
-                    onClose={() => setSelectedObjectId(null)}
-                />
             </YMap>
         </YMapComponentsProvider>
     );

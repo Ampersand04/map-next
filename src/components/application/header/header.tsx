@@ -1,29 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { Container } from '@/components/shared/container';
 import Image from 'next/image';
 import UserMenu from '@/components/shared/userMenu/userMenu';
 import InputSearch from '../inputSearch/inputSearch';
+import FilterModal from '@/components/shared/filter/filter';
 
 interface Suggestion {
     name: string;
     address: string;
-    icon: string;
+    images: string[];
+    id: string;
 }
 
 interface Props {
     className?: string;
+    setSelectedObjectId: (id: string | null) => void; // Функция для установки выбранного объекта
+    setIsPanelOpen: (open: boolean) => void; // Функция для открытия боковой панели
 }
 
-const Header: React.FC<Props> = () => {
+const Header: React.FC<Props> = ({ setSelectedObjectId, setIsPanelOpen }) => {
     const [searchValue, setSearchValue] = useState('');
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-    const [selectedObject, setSelectedObject] = useState<Suggestion | null>(null); // Track selected object for side panel
-    const [isPanelOpen, setIsPanelOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для модалки
+    const [filters, setFilters] = useState({});
 
-    // Function to fetch suggestions from the API
+    // Функция для получения подсказок из API
     const fetchSuggestions = async (query: string) => {
         try {
-            const response = await fetch(`/api/suggestions?query=${query}`);
+            const queryParams = new URLSearchParams({
+                query,
+                ...filters, // Добавляем фильтры в запрос
+            }).toString();
+
+            const response = await fetch(`/api/suggestions?${queryParams}`);
             const data = await response.json();
             setSuggestions(data.suggestions || []);
         } catch (error) {
@@ -32,50 +40,80 @@ const Header: React.FC<Props> = () => {
         }
     };
 
-    // Debounce function to delay API calls while typing
+    // Дебаунс для задержки API вызовов при вводе
     useEffect(() => {
         const handler = setTimeout(() => {
             if (searchValue) {
-                fetchSuggestions(searchValue); // Fetch suggestions when search value changes
+                fetchSuggestions(searchValue); // Получаем подсказки при изменении значения поиска
             } else {
-                setSuggestions([]); // Clear suggestions if search input is empty
+                setSuggestions([]); // Очищаем подсказки, если поле поиска пустое
             }
-        }, 300); // 300ms delay
+        }, 300); // 300мс задержка
 
         return () => {
-            clearTimeout(handler); // Cleanup timeout on component unmount
+            clearTimeout(handler); // Очистка таймера при размонтировании компонента
         };
     }, [searchValue]);
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchValue(event.target.value); // Update search input value
+        setSearchValue(event.target.value); // Обновляем значение поиска
     };
 
     const handleSuggestionClick = (suggestion: Suggestion) => {
-        setSelectedObject(suggestion); // Set the selected suggestion for the side panel
-        setIsPanelOpen(true); // Open the side panel
+        setSelectedObjectId(suggestion.id); // Устанавливаем выбранный объект по ID
+        setIsPanelOpen(true); // Открываем боковую панель
     };
 
-    const closePanel = () => {
-        setIsPanelOpen(false); // Close the panel
+    const showModal = () => {
+        setIsModalOpen(true);
     };
+
+    const handleModalOk = (selectedFilters: any) => {
+        setFilters(selectedFilters); // Устанавливаем выбранные фильтры
+        setIsModalOpen(false);
+
+        fetchSuggestions(searchValue);
+    };
+
+    const handleModalCancel = (selectedFilters: any) => {
+        setFilters(selectedFilters);
+        setIsModalOpen(false);
+    };
+
+    const hasActiveFilters = Object.values(filters).some((value) => value);
 
     return (
         <header
-            className={`fixed z-10 transition-all duration-500 top-0 left-0 right-0 bg-white shadow-md flex min-h-[73px] max-h-[73px] max-md:px-6 max-md:py-4 px-20 py-3 `}>
+            className={`fixed z-10 transition-all duration-500 top-0 left-0 right-0 bg-white shadow-md flex min-h-[73px] max-h-[73px] max-md:px-6 max-md:py-4 px-20 py-3`}>
             <div className="flex flex-grow items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                     <Image className="" width={15} height={15} src={'/logo-blue.png'} alt="logo" />
                     <p className="text-blue-main text-sm font-semibold">карта жкх</p>
                 </div>
-                <InputSearch
-                    value={searchValue}
-                    onChange={handleSearchChange}
-                    suggestions={suggestions}
-                    onSuggestionClick={handleSuggestionClick}
-                />
+                <div className="flex items-center gap-4">
+                    <InputSearch
+                        value={searchValue}
+                        onChange={handleSearchChange}
+                        suggestions={suggestions}
+                        onSuggestionClick={handleSuggestionClick} // Передаем функцию для обработки клика по подсказке
+                    />
+                    <div className="relative flex items-center h-fit">
+                        <Image
+                            className="hover:cursor-pointer m-2"
+                            src="./filter.svg"
+                            alt="Фильтры"
+                            height={18}
+                            width={18}
+                            onClick={showModal}
+                        />
+                        {hasActiveFilters && (
+                            <div className="absolute -top-1 -right-1 bg-red-500 w-3 h-3 rounded-lg"></div>
+                        )}
+                    </div>
+                </div>
                 <UserMenu />
             </div>
+            <FilterModal visible={isModalOpen} onOk={handleModalOk} onCancel={handleModalCancel} />
         </header>
     );
 };

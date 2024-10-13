@@ -4,7 +4,8 @@ import { useState } from 'react';
 interface Suggestion {
     name: string;
     address: string;
-    icon: string;
+    images: string[];
+    id: string; // Добавлено поле id
 }
 
 interface InputSearchProps {
@@ -12,7 +13,7 @@ interface InputSearchProps {
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     placeholder?: string;
     suggestions: Suggestion[];
-    onSuggestionClick: (suggestion: Suggestion) => void; // New callback prop
+    onSuggestionClick: (suggestion: Suggestion) => void; // Callback при выборе подсказки
 }
 
 const InputSearch: React.FC<InputSearchProps> = ({
@@ -54,22 +55,33 @@ const InputSearch: React.FC<InputSearchProps> = ({
                     />
                 </div>
             )}
-            {/* Suggestions List */}
-            {isFocused && value.trim() !== '' && suggestions.length > 0 && (
-                <div className="absolute top-14 left-0 w-full max-h-60 overflow-y-auto text-text bg-white rounded-lg shadow-md z-10">
+            {/* Список подсказок */}
+            {isFocused && value.trim() !== '' && suggestions.length > 0 ? (
+                <div className="absolute top-14 left-0 w-full max-h-60 overflow-y-auto text-text bg-white rounded-lg shadow-md z-10 ">
                     {suggestions.map((suggestion, index) => (
                         <div
                             key={index}
-                            className="flex items-center gap-2 p-4 hover:bg-gray cursor-pointer border-b border-[#DEEBEE] last:border-none"
-                            onClick={() => onSuggestionClick(suggestion)} // Trigger callback on click
+                            className="flex items-center gap-2 p-4 hover:bg-gray-200 cursor-pointer border-b border-[#DEEBEE] last:border-none hover:bg-gray"
+                            onClick={() => onSuggestionClick(suggestion)} // Вызов функции при клике на подсказку
                         >
-                            <Image src={suggestion.icon} alt="Icon" width={24} height={24} />
-                            <div className="flex flex-col">
-                                <span className="font-semibold text-sm">{suggestion.name}</span>
-                                <span className="text-xs text-gray-500">{suggestion.address}</span>
+                            <Image
+                                src={suggestion.images[0] || '/residential-icon.png'}
+                                alt={suggestion.name}
+                                width={32}
+                                height={32}
+                            />
+                            <div>
+                                <h4 className="font-semibold">{suggestion.name}</h4>
+                                <p className="text-xs text-gray-500">{suggestion.address}</p>
                             </div>
                         </div>
                     ))}
+                </div>
+            ) : (
+                <div className="absolute top-14 left-0 w-full max-h-60 overflow-y-auto text-text bg-white rounded-lg shadow-md z-10">
+                    <div className="flex items-center gap-2 p-4 border-b border-[#DEEBEE] last:border-none ">
+                        Нет данных
+                    </div>
                 </div>
             )}
         </div>
