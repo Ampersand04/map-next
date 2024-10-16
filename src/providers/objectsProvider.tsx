@@ -9,6 +9,7 @@ interface ObjectData {
     yearOfConstruction: string | null;
     completionRate: number | null;
     isArchived: boolean;
+    wearRate: number | null;
     address: string | null;
 }
 

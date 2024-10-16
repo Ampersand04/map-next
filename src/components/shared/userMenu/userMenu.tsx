@@ -5,8 +5,13 @@ import { signOut } from '@/auth'; // Assume this is the signOut function
 import { useUserSession } from '@/hooks/useUserSession'; // Custom hook
 import { logout } from '@/actions/logout';
 import Link from 'next/link';
+import { IconRole } from './iconRole';
 
-const UserMenu: React.FC = () => {
+interface UserMenuProps {
+    isLight?: boolean;
+}
+
+const UserMenu: React.FC<UserMenuProps> = ({ isLight }) => {
     const { user, loading } = useUserSession();
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -29,13 +34,10 @@ const UserMenu: React.FC = () => {
         <div className="relative flex gap-4 items-center">
             {user ? (
                 <div onClick={toggleDropdown} className="cursor-pointer flex items-center gap-2">
-                    <Image
-                        src={user?.image || '/default-avatar.png'}
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                        alt="Profile Image"
-                    />
+                    <p className={`text-right truncate max-w-[120px] ${isLight && 'text-text'} `}>
+                        {user?.name}
+                    </p>
+                    <IconRole />
                 </div>
             ) : (
                 <>
@@ -50,13 +52,7 @@ const UserMenu: React.FC = () => {
             {isDropdownOpen && (
                 <div className="absolute top-14 right-0 text-text-secondary mt-2 w-64 bg-white rounded-lg shadow-lg z-50">
                     <div className="flex items-center gap-2 bg-gray p-4 rounded-t-lg">
-                        <Image
-                            src={user?.image || '/default-avatar.png'}
-                            width={40}
-                            height={40}
-                            className="rounded-full"
-                            alt="Profile Image"
-                        />
+                        <IconRole />
                         <div>
                             <h3 className="text-sm text-text font-semibold leading-4">
                                 {user?.name}
@@ -119,7 +115,7 @@ const UserMenu: React.FC = () => {
                                 <div className="flex items-center gap-[8px]">
                                     <Image src="/home.svg" alt="" width={24} height={24} />
 
-                                    <h5 className="text-gray-700 ">Объекты</h5>
+                                    <h5 className="text-gray-700 font-semibold">Объекты</h5>
                                 </div>
                                 <Image src="/user-right-arrow.svg" alt="" width={12} height={12} />
                             </Link>

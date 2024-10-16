@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
-import { Modal, Button, Input, Select } from 'antd';
+import { Modal, Button, Input, Select, InputNumber } from 'antd';
 import { ObjectContext } from '@/providers/objectsProvider';
+import { ObjectType } from '@prisma/client';
 
 const { Option } = Select;
 
@@ -33,15 +34,37 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
         onOk(filters);
     };
 
+    const handleReset = () => {
+        setFilters({
+            type: '',
+            yearFrom: '',
+            yearTo: '',
+            region: '',
+            city: '',
+            wearFrom: '',
+            wearTo: '',
+            readinessFrom: '',
+            readinessTo: '',
+        });
+    };
+
     return (
         <Modal
             title="Фильтры"
             open={visible}
             onOk={handleOk}
-            onCancel={handleOk}
             width={1000}
             okText="Сохранить"
-            cancelText="Сбросить">
+            cancelText="Сбросить"
+            onCancel={onCancel} // Закрываем модалку при нажатии "Отмена"
+            footer={[
+                <Button key="reset" onClick={handleReset}>
+                    Сбросить
+                </Button>,
+                <Button key="apply" type="primary" onClick={handleOk}>
+                    Сохранить
+                </Button>,
+            ]}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
                 {/* Left column */}
                 <div style={{ flex: 1 }}>
@@ -51,40 +74,42 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
                             placeholder="Выбрать"
                             style={{ width: '100%' }}
                             onChange={(value) => handleFilterChange('type', value)}>
-                            <Option value="RESIDENTIAL">Жилой дом</Option>
-                            <Option value="Общественное помещение">
+                            <Option value={ObjectType.RESIDENTIAL}>Жилой дом</Option>
+                            <Option value={ObjectType.PUBLIC_OFFICE}>
                                 Общественное или административно-офисное помещение
                             </Option>
-                            <Option value="Учреждение образования">Учреждение образования</Option>
-                            <Option value="Здравоохранение">Здравоохранение</Option>
-                            <Option value="Объект торгового назначения">
-                                Объект торгового назначения
-                            </Option>
-                            <Option value="Культурный объект">Культурный объект</Option>
-                            <Option value="Предприятие общественного питания">
+                            <Option value={ObjectType.EDUCATIONAL}>Учреждение образования</Option>
+                            <Option value={ObjectType.HEALTHCARE}>Здравоохранение</Option>
+                            <Option value={ObjectType.TRADE}>Объект торгового назначения</Option>
+                            <Option value={ObjectType.CULTURAL}>Культурный объект</Option>
+                            <Option value={ObjectType.CATERING}>
                                 Предприятие общественного питания
                             </Option>
-                            <Option value="Объект производственного назначения">
+                            <Option value={ObjectType.INDUSTRIAL}>
                                 Объект производственного назначения
                             </Option>
-                            <Option value="Объект городской инфраструктуры">
+                            <Option value={ObjectType.URBAN_INFRASTRUCTURE}>
                                 Объект городской инфраструктуры
                             </Option>
-                            <Option value="Транспортная инфраструктура">
+                            <Option value={ObjectType.TRANSPORT_INFRASTRUCTURE}>
                                 Транспортная инфраструктура
                             </Option>
-                            <Option value="Религиозное сооружение">Религиозное сооружение</Option>
-                            <Option value="Объект защиты населения">Объект защиты населения</Option>
-                            <Option value="Объект складского назначения">
+                            <Option value={ObjectType.RELIGIOUS}>Религиозное сооружение</Option>
+                            <Option value={ObjectType.CIVIL_DEFENSE}>
+                                Объект защиты населения
+                            </Option>
+                            <Option value={ObjectType.WAREHOUSE}>
                                 Объект складского назначения
                             </Option>
-                            <Option value="Нежилое помещение">Нежилое помещение</Option>
-                            <Option value="Комплексная застройка">Комплексная застройка</Option>
-                            <Option value="Временный объект">Временный объект</Option>
-                            <Option value="Объект незавершенного строительства">
+                            <Option value={ObjectType.NON_RESIDENTIAL}>Нежилое помещение</Option>
+                            <Option value={ObjectType.COMPLEX_DEVELOPMENT}>
+                                Комплексная застройка
+                            </Option>
+                            <Option value={ObjectType.TEMPORARY}>Временный объект</Option>
+                            <Option value={ObjectType.UNFINISHED_CONSTRUCTION}>
                                 Объект незавершенного строительства
                             </Option>
-                            <Option value="Прочее">Прочее</Option>
+                            <Option value={ObjectType.OTHER}>Прочее</Option>
                         </Select>
                     </div>
                     <div style={{ marginTop: '20px' }}>
@@ -99,13 +124,19 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
                     <div style={{ marginTop: '20px' }}>
                         <label>Физический износ, %</label>
                         <div style={{ display: 'flex', gap: '10px' }}>
-                            <Input
+                            <InputNumber
+                                className="w-full"
                                 placeholder="От 0"
-                                onChange={(e) => handleFilterChange('wearFrom', e.target.value)}
+                                min={0}
+                                max={100}
+                                onChange={(value) => handleFilterChange('wearFrom', value)}
                             />
-                            <Input
+                            <InputNumber
+                                min={1}
+                                max={100}
+                                className="w-full"
                                 placeholder="До 100"
-                                onChange={(e) => handleFilterChange('wearTo', e.target.value)}
+                                onChange={(value) => handleFilterChange('wearTo', value)}
                             />
                         </div>
                     </div>
@@ -116,13 +147,17 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
                     <div>
                         <label>Год постройки</label>
                         <div style={{ display: 'flex', gap: '10px' }}>
-                            <Input
+                            <InputNumber
+                                min={1900}
+                                max={2024}
                                 placeholder="От 1900"
-                                onChange={(e) => handleFilterChange('yearFrom', e.target.value)}
+                                onChange={(value) => handleFilterChange('yearFrom', value)}
                             />
-                            <Input
+                            <InputNumber
+                                min={1901}
+                                max={2024}
                                 placeholder="До 2024"
-                                onChange={(e) => handleFilterChange('yearTo', e.target.value)}
+                                onChange={(value) => handleFilterChange('yearTo', value)}
                             />
                         </div>
                     </div>
@@ -133,29 +168,33 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
                             style={{ width: '100%' }}
                             onChange={(value) => handleFilterChange('city', value)}>
                             <Option value="brest">Брест</Option>
-                            <Option value="">Кобрин</Option>
-                            <Option value="">Малорита</Option>
-                            <Option value="">Барановичи</Option>
-                            <Option value="">Пружаны</Option>
-                            <Option value="">Береза</Option>
-                            <Option value="">Жабинка</Option>
-                            <Option value="">Каменец</Option>
-                            <Option value="">Ганцевичи</Option>
-                            <Option value="">Столин</Option>
+                            <Option value="kobrin">Кобрин</Option>
+                            <Option value="malorita">Малорита</Option>
+                            <Option value="baranovichi">Барановичи</Option>
+                            <Option value="pruzhany">Пружаны</Option>
+                            <Option value="bereza">Береза</Option>
+                            <Option value="zhabinka">Жабинка</Option>
+                            <Option value="kamenets">Каменец</Option>
+                            <Option value="gantsevichi">Ганцевичи</Option>
+                            <Option value="stolin">Столин</Option>
                         </Select>
                     </div>
                     <div style={{ marginTop: '20px' }}>
                         <label>Готовность, %</label>
                         <div style={{ display: 'flex', gap: '10px' }}>
-                            <Input
+                            <InputNumber
+                                className="w-full"
                                 placeholder="От 0"
-                                onChange={(e) =>
-                                    handleFilterChange('readinessFrom', e.target.value)
-                                }
+                                min={0}
+                                max={100}
+                                onChange={(value) => handleFilterChange('readinessFrom', value)}
                             />
-                            <Input
+                            <InputNumber
+                                className="w-full"
+                                min={1}
+                                max={100}
                                 placeholder="До 100"
-                                onChange={(e) => handleFilterChange('readinessTo', e.target.value)}
+                                onChange={(value) => handleFilterChange('readinessTo', value)}
                             />
                         </div>
                     </div>

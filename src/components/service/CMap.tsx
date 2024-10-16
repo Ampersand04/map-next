@@ -16,6 +16,7 @@ import { ObjectContext } from '@/providers/objectsProvider';
 import SidePanel from '../application/sidePanel/SidePanel';
 import Image from 'next/image';
 import { Spin } from 'antd';
+import dayjs from 'dayjs';
 
 interface ObjectData {
     id: string;
@@ -28,21 +29,45 @@ const CMap = ({ setSelectedObjectId }: { setSelectedObjectId: any }) => {
     const [markerActive, setMarkerActive] = useState(false);
 
     const filteredObjects = objects.filter((item) => {
-        // Проверяем все фильтры
         if (filters.type && item.type !== filters.type) return false;
+        if (filters.yearFrom && item.yearOfConstruction) {
+            const itemYear = dayjs(item.yearOfConstruction).year();
+            if (itemYear < filters.yearFrom) return false;
+        }
+
+        if (filters.yearTo && item.yearOfConstruction) {
+            const itemYear = dayjs(item.yearOfConstruction).year();
+            if (itemYear > filters.yearTo) return false;
+        }
+
+        // Фильтр по региону (region) - проверка региона в адресе
+        // if (filters.region && item.address && !item.address.includes(filters.region)) return false;
+
+        // Фильтр по городу (city) - проверка города в адресе
+        // if (filters.city && item.address && !item.address.includes(filters.city)) return false;
+
+        // Фильтр по физическому износу (wearFrom, wearTo)
+        if (filters.wearFrom && item.wearRate !== null && item.wearRate < filters.wearFrom)
+            return false;
+
+        if (filters.wearTo && item.wearRate !== null && item.wearRate > filters.wearTo)
+            return false;
+
+        // Фильтр по степени готовности (readinessFrom, readinessTo)
         if (
-            filters.yearFrom &&
-            item.yearOfConstruction &&
-            Number(item.yearOfConstruction) < filters.yearFrom
+            filters.readinessFrom &&
+            item.completionRate !== null &&
+            item.completionRate < filters.readinessFrom
         )
             return false;
+
         if (
-            filters.yearTo &&
-            item.yearOfConstruction &&
-            Number(item.yearOfConstruction) > filters.yearTo
+            filters.readinessTo &&
+            item.completionRate !== null &&
+            item.completionRate > filters.readinessTo
         )
             return false;
-        if (filters.city && item.address && !item.address.includes(filters.city)) return false;
+
         return true;
     });
 
