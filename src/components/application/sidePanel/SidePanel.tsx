@@ -116,6 +116,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                                     }}>
                                     ▶
                                 </button>
+                                5
                             </div>
                         )}
                     </div>

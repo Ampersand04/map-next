@@ -1,8 +1,6 @@
-// context/ObjectContext.tsx
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-// Интерфейсы для данных объекта и контекста
 interface ObjectData {
     id: string;
     type: string | null;
@@ -17,33 +15,42 @@ interface ObjectData {
 interface ObjectContextProps {
     objects: ObjectData[];
     loading: boolean;
+    filters: any; // Добавьте тип для фильтров
+    setFilters: (filters: any) => void; // Функция для обновления фильтров
 }
 
-// Создаем контекст
 export const ObjectContext = createContext<ObjectContextProps>({
     objects: [],
     loading: true,
+    filters: {},
+    setFilters: () => {},
 });
 
 // Провайдер контекста
 export const ObjectProvider = ({ children }: { children: React.ReactNode }) => {
     const [objects, setObjects] = useState<ObjectData[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [filters, setFilters] = useState({}); // Добавьте состояние для фильтров
 
     const fetchObjects = async () => {
-        setLoading(true); // Устанавливаем состояние загрузки
+        setLoading(true);
         try {
             const response = await axios.get('/api/objects');
             setObjects(response.data);
         } catch (error) {
             console.error('Error fetching objects:', error);
         } finally {
-            setLoading(false); // Отключаем загрузку после получения данных
+            setLoading(false);
         }
     };
+
     useEffect(() => {
         fetchObjects();
     }, []);
 
-    return <ObjectContext.Provider value={{ objects, loading }}>{children}</ObjectContext.Provider>;
+    return (
+        <ObjectContext.Provider value={{ objects, loading, filters, setFilters }}>
+            {children}
+        </ObjectContext.Provider>
+    );
 };

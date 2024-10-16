@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Modal, Button, Input, Select } from 'antd';
+import { ObjectContext } from '@/providers/objectsProvider';
 
 const { Option } = Select;
 
@@ -10,7 +11,8 @@ interface FilterModalProps {
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) => {
-    const [filters, setFilters] = useState({
+    const { setFilters } = useContext(ObjectContext);
+    const [filters, setFilter] = useState({
         type: '',
         yearFrom: '',
         yearTo: '',
@@ -23,11 +25,12 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
     });
 
     const handleFilterChange = (key: string, value: any) => {
-        setFilters({ ...filters, [key]: value });
+        setFilter({ ...filters, [key]: value });
     };
 
     const handleOk = () => {
-        onOk(filters); // Передаем фильтры в родительский компонент
+        setFilters(filters);
+        onOk(filters);
     };
 
     return (
@@ -48,7 +51,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
                             placeholder="Выбрать"
                             style={{ width: '100%' }}
                             onChange={(value) => handleFilterChange('type', value)}>
-                            <Option value="Жилой дом">Жилой дом</Option>
+                            <Option value="RESIDENTIAL">Жилой дом</Option>
                             <Option value="Общественное помещение">
                                 Общественное или административно-офисное помещение
                             </Option>

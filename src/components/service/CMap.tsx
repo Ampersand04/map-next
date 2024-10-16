@@ -24,11 +24,30 @@ interface ObjectData {
 }
 
 const CMap = ({ setSelectedObjectId }: { setSelectedObjectId: any }) => {
-    const { objects, loading } = useContext(ObjectContext);
+    const { objects, loading, filters } = useContext(ObjectContext);
     const [markerActive, setMarkerActive] = useState(false);
 
+    const filteredObjects = objects.filter((item) => {
+        // Проверяем все фильтры
+        if (filters.type && item.type !== filters.type) return false;
+        if (
+            filters.yearFrom &&
+            item.yearOfConstruction &&
+            Number(item.yearOfConstruction) < filters.yearFrom
+        )
+            return false;
+        if (
+            filters.yearTo &&
+            item.yearOfConstruction &&
+            Number(item.yearOfConstruction) > filters.yearTo
+        )
+            return false;
+        if (filters.city && item.address && !item.address.includes(filters.city)) return false;
+        return true;
+    });
+
     // Преобразуем данные объектов в точки для карты
-    const points = objects
+    const points = filteredObjects
         ?.filter((item) => item.gpsCoordinates !== null)
         ?.map((item) => {
             if (item.gpsCoordinates) {

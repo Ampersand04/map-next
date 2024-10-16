@@ -15,9 +15,14 @@ interface Props {
     className?: string;
     setSelectedObjectId: (id: string | null) => void; // Функция для установки выбранного объекта
     setIsPanelOpen: (open: boolean) => void; // Функция для открытия боковой панели
+    setIsFilterModalVisible: (open: boolean) => void; // Функция для открытия боковой панели
 }
 
-const Header: React.FC<Props> = ({ setSelectedObjectId, setIsPanelOpen }) => {
+const Header: React.FC<Props> = ({
+    setSelectedObjectId,
+    setIsPanelOpen,
+    setIsFilterModalVisible,
+}) => {
     const [searchValue, setSearchValue] = useState('');
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для модалки
@@ -104,7 +109,7 @@ const Header: React.FC<Props> = ({ setSelectedObjectId, setIsPanelOpen }) => {
                             alt="Фильтры"
                             height={18}
                             width={18}
-                            onClick={showModal}
+                            onClick={() => setIsFilterModalVisible(true)}
                         />
                         {hasActiveFilters && (
                             <div className="absolute -top-1 -right-1 bg-red-500 w-3 h-3 rounded-lg"></div>
@@ -113,7 +118,7 @@ const Header: React.FC<Props> = ({ setSelectedObjectId, setIsPanelOpen }) => {
                 </div>
                 <UserMenu />
             </div>
-            <FilterModal visible={isModalOpen} onOk={handleModalOk} onCancel={handleModalCancel} />
+            {/* <FilterModal visible={isModalOpen} onOk={handleModalOk} onCancel={handleModalCancel} /> */}
         </header>
     );
 };
