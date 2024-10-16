@@ -5,6 +5,8 @@ import { Table } from 'antd';
 import { User } from '@/components/dashboard/user.iterface';
 import DashboardPage from '@/components/dashboard/dashboard-page';
 import UserActionButtons from '@/components/dashboard/UserActionButtons';
+import { RoleGate } from '@/components/auth/role-gate';
+import { Role } from '@prisma/client';
 
 const UsersPage = () => {
     const [dataSource, setDataSource] = useState<User[]>([]);
@@ -79,20 +81,25 @@ const UsersPage = () => {
     ];
 
     return (
-        <DashboardPage pageName="Пользователи" tableData={dataSource} createLink="/users/create">
-            <div className="w-full overflow-auto bg-admin-bg">
-                <Table
-                    columns={columns}
-                    dataSource={dataSource}
-                    rowKey="id"
-                    pagination={{ total: totalItems }}
-                    scroll={{
-                        x: 'max-content',
-                        y: 70 * 5,
-                    }}
-                />
-            </div>
-        </DashboardPage>
+        <RoleGate allowedRole={Role.ADMIN}>
+            <DashboardPage
+                pageName="Пользователи"
+                tableData={dataSource}
+                createLink="/dashboard/users/create">
+                <div className="w-full overflow-auto bg-admin-bg">
+                    <Table
+                        columns={columns}
+                        dataSource={dataSource}
+                        rowKey="id"
+                        pagination={{ total: totalItems }}
+                        scroll={{
+                            x: 'max-content',
+                            y: 70 * 5,
+                        }}
+                    />
+                </div>
+            </DashboardPage>
+        </RoleGate>
     );
 };
 

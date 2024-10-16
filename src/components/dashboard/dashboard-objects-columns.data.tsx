@@ -3,6 +3,8 @@ import Image from 'next/image';
 import { ColumnType } from 'antd/es/table'; // Импортируем необходимые типы из Ant Design
 import { useRouter } from 'next/navigation';
 import ActionButtons from './ActionButtons';
+import { objectTypeConvert } from '@/lib/objextTypeConvert';
+import dayjs from 'dayjs';
 
 // Определяем интерфейс для данных строки
 interface ObjectData {
@@ -22,6 +24,9 @@ export const columns: ColumnType<ObjectData>[] = [
         key: 'yearOfConstruction',
         sorter: (a, b) =>
             new Date(a.yearOfConstruction).getTime() - new Date(b.yearOfConstruction).getTime(),
+        render: (yearOfConstruction: Date | string): JSX.Element => (
+            <p>{dayjs(yearOfConstruction).format('DD.MM.YYYY')}</p>
+        ),
     },
     {
         title: 'Статус',
@@ -42,6 +47,7 @@ export const columns: ColumnType<ObjectData>[] = [
         title: 'Назначение',
         dataIndex: 'type',
         key: 'type',
+        render: (type: string) => <span>{objectTypeConvert(type)}</span>,
     },
     {
         title: 'Адрес',

@@ -15,7 +15,7 @@ const UserMenu: React.FC = () => {
     };
 
     if (loading) {
-        return <div className="text-text">Loading...</div>; // Show a loading state while user data is being fetched
+        return <div className="text-text">Загрузка...</div>; // Show a loading state while user data is being fetched
     }
 
     const handleLogoutClick = async () => {
@@ -100,7 +100,7 @@ const UserMenu: React.FC = () => {
                         {/* Role-Specific Items */}
                         {isAdmin && (
                             <Link
-                                href={'/admin/objects'}
+                                href={'/dashboard/objects'}
                                 className="menu-item flex items-center justify-between hover:cursor-pointer">
                                 <div className="flex items-center gap-[8px]">
                                     <Image src="/control-panel.svg" alt="" width={24} height={24} />
@@ -114,7 +114,7 @@ const UserMenu: React.FC = () => {
                         )}
                         {isManager && (
                             <Link
-                                href={'/admin/objects'}
+                                href={'/dashboard/objects'}
                                 className="menu-item flex items-center justify-between hover:cursor-pointer">
                                 <div className="flex items-center gap-[8px]">
                                     <Image src="/home.svg" alt="" width={24} height={24} />

@@ -12,11 +12,7 @@ export default function Service() {
     const [isPanelOpen, setIsPanelOpen] = useState(false); // Состояние для боковой панели
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const objectId = urlParams.get('open'); // Получаем параметр open из URL
-
         if (selectedObjectId) {
-            setSelectedObjectId(objectId); // Устанавливаем ID объекта, если он есть
             setIsPanelOpen(true); // Открываем боковую панель, если объект был передан в URL
             console.log('Opening object with ID:', objectId);
         }

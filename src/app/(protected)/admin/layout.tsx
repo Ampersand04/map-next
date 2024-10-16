@@ -11,7 +11,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         { title: 'Настройки', pageUrl: '/settings' },
     ];
     return (
-        <RoleGate allowedRole={Role.ADMIN} redirectPath="/admin/objects">
+        <RoleGate allowedRole={Role.ADMIN} redirectPath="/objects">
             <div className="flex flex-row bg-admin-bg w-full h-[100vh] p-2 overflow-hidden">
                 <DashboardAside menu={adminElements} />
                 <section className="text-text flex-grow overflow-hidden p-5 h-full">

@@ -71,7 +71,10 @@ const ManagersPage = () => {
     ];
 
     return (
-        <DashboardPage pageName="Менеджеры" tableData={dataSource} createLink="/admin/users/create">
+        <DashboardPage
+            pageName="Менеджеры"
+            tableData={dataSource}
+            createLink="/dashboard/users/create">
             <div className="w-full overflow-auto bg-admin-bg">
                 <Table
                     columns={columns}

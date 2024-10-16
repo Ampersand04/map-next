@@ -81,8 +81,24 @@ model Object {
 }
 
 enum ObjectType {
-  INDUSTRIAL
-  RESIDENTIAL
+  RESIDENTIAL // Жилые дома
+  PUBLIC_OFFICE // Общественное или административно-офисное помещение
+  EDUCATIONAL // Учреждение образования
+  HEALTHCARE // Здравоохранение
+  TRADE // Объект торгового назначения
+  CULTURAL // Культурный объект
+  CATERING // Предприятие общественного питания
+  INDUSTRIAL // Объект производственного назначения
+  URBAN_INFRASTRUCTURE // Объект городской инфраструктуры
+  TRANSPORT_INFRASTRUCTURE // Транспортная инфраструктура
+  RELIGIOUS // Религиозное сооружение
+  CIVIL_DEFENSE // Объект защиты населения
+  WAREHOUSE // Объект складского назначения
+  NON_RESIDENTIAL // Нежилое помещение
+  COMPLEX_DEVELOPMENT // Комплексная застройка
+  TEMPORARY // Временный объект
+  UNFINISHED_CONSTRUCTION // Объект незавершенного строительства
+  OTHER // Прочее
 }
 
 // model Review {

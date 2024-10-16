@@ -20,8 +20,8 @@ interface FormData {
 
 // Dummy data for aside menu (You can adjust this)
 const menu = [
-    { title: 'Create Object', pageUrl: '/admin/objects/create' },
-    { title: 'Dashboard', pageUrl: '/admin/dashboard' },
+    { title: 'Create Object', pageUrl: '/objects/create' },
+    { title: 'Dashboard', pageUrl: '/dashboard' },
 ];
 
 const CreateObjectPage: React.FC = () => {
@@ -79,7 +79,7 @@ const CreateObjectPage: React.FC = () => {
 
             if (res.ok) {
                 // Redirect to dashboard or success page
-                router.push('/admin/objects');
+                router.push('/objects');
             } else {
                 console.error('Failed to create object');
             }

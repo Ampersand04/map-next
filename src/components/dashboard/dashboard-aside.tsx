@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { logout } from '@/actions/logout';
 import { useRouter, usePathname } from 'next/navigation';
 
 interface Menu {
@@ -16,10 +16,14 @@ const DashboardAside: React.FC<DashboardAsideProps> = ({ menu }: DashboardAsideP
     const pathname = usePathname();
     const router = useRouter();
 
+    const handleLogout = async () => {
+        await logout(); // Вызов функции выхода
+        router.push('/login'); // Перенаправление на страницу логина после выхода
+    };
     return (
         <aside className="bg-white p-3 w-[188px] min-h-full rounded-lg">
             {menu.map((item) => {
-                const isActive = pathname.startsWith('/admin' + item.pageUrl);
+                const isActive = pathname.startsWith('' + item.pageUrl);
                 return (
                     <div
                         key={item.title}
@@ -29,12 +33,17 @@ const DashboardAside: React.FC<DashboardAsideProps> = ({ menu }: DashboardAsideP
                                 : 'bg-white text-text' // Неактивный элемент
                         }`}
                         onClick={() => {
-                            router.push('/admin' + item.pageUrl);
+                            router.push('' + item.pageUrl);
                         }}>
                         <span>{item.title}</span>
                     </div>
                 );
             })}
+            <div
+                className="cursor-pointer text-sm block w-full p-4 rounded-lg transition-colors duration-300 bg-white text-text hover:bg-gray"
+                onClick={handleLogout}>
+                <span>Выйти</span>
+            </div>
         </aside>
     );
 };

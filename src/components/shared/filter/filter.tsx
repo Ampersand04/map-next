@@ -36,6 +36,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
             open={visible}
             onOk={handleOk}
             onCancel={handleOk}
+            width={1000}
             okText="Сохранить"
             cancelText="Сбросить">
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
@@ -48,7 +49,39 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
                             style={{ width: '100%' }}
                             onChange={(value) => handleFilterChange('type', value)}>
                             <Option value="Жилой дом">Жилой дом</Option>
+                            <Option value="Общественное помещение">
+                                Общественное или административно-офисное помещение
+                            </Option>
+                            <Option value="Учреждение образования">Учреждение образования</Option>
+                            <Option value="Здравоохранение">Здравоохранение</Option>
+                            <Option value="Объект торгового назначения">
+                                Объект торгового назначения
+                            </Option>
                             <Option value="Культурный объект">Культурный объект</Option>
+                            <Option value="Предприятие общественного питания">
+                                Предприятие общественного питания
+                            </Option>
+                            <Option value="Объект производственного назначения">
+                                Объект производственного назначения
+                            </Option>
+                            <Option value="Объект городской инфраструктуры">
+                                Объект городской инфраструктуры
+                            </Option>
+                            <Option value="Транспортная инфраструктура">
+                                Транспортная инфраструктура
+                            </Option>
+                            <Option value="Религиозное сооружение">Религиозное сооружение</Option>
+                            <Option value="Объект защиты населения">Объект защиты населения</Option>
+                            <Option value="Объект складского назначения">
+                                Объект складского назначения
+                            </Option>
+                            <Option value="Нежилое помещение">Нежилое помещение</Option>
+                            <Option value="Комплексная застройка">Комплексная застройка</Option>
+                            <Option value="Временный объект">Временный объект</Option>
+                            <Option value="Объект незавершенного строительства">
+                                Объект незавершенного строительства
+                            </Option>
+                            <Option value="Прочее">Прочее</Option>
                         </Select>
                     </div>
                     <div style={{ marginTop: '20px' }}>
@@ -57,8 +90,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
                             placeholder="Выбрать"
                             style={{ width: '100%' }}
                             onChange={(value) => handleFilterChange('region', value)}>
-                            <Option value="Область 1">Область 1</Option>
-                            <Option value="Область 2">Область 2</Option>
+                            <Option value="Brest">Брестская область</Option>
                         </Select>
                     </div>
                     <div style={{ marginTop: '20px' }}>
@@ -92,13 +124,21 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onOk, onCancel }) =>
                         </div>
                     </div>
                     <div style={{ marginTop: '20px' }}>
-                        <label>Населенный пункт</label>
+                        <label>Город</label>
                         <Select
                             placeholder="Выбрать"
                             style={{ width: '100%' }}
                             onChange={(value) => handleFilterChange('city', value)}>
-                            <Option value="Город 1">Город 1</Option>
-                            <Option value="Город 2">Город 2</Option>
+                            <Option value="brest">Брест</Option>
+                            <Option value="">Кобрин</Option>
+                            <Option value="">Малорита</Option>
+                            <Option value="">Барановичи</Option>
+                            <Option value="">Пружаны</Option>
+                            <Option value="">Береза</Option>
+                            <Option value="">Жабинка</Option>
+                            <Option value="">Каменец</Option>
+                            <Option value="">Ганцевичи</Option>
+                            <Option value="">Столин</Option>
                         </Select>
                     </div>
                     <div style={{ marginTop: '20px' }}>

@@ -36,27 +36,34 @@ cloudinary.config({
 
 export async function POST(req: Request) {
     try {
+        // Проверяем сессию пользователя
         const session = await auth();
-
         if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-        const creatorId = session?.user?.id;
+        const creatorId = session.user.id;
         if (!creatorId) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const formData = await req.formData(); // Используйте formData для получения файлов
+        const formData = await req.formData();
+        console.log('Form Data:', Array.from(formData.entries())); // Логируем все данные формы
 
-        const data: any = {}; // Объект для хранения данных формы
+        const data: any = { images: [] }; // Объект для хранения данных формы
         formData.forEach((value, key) => {
+            console.log(`Key: ${key}, Value:`, value); // Логируем ключи и значения
             if (key === 'images[]') {
-                // Если это изображения, сохраняем их в массив
-                data.images = data.images || [];
-                data.images.push(value);
+                // Используйте ключ 'images[]' для изображений
+                data.images.push(value); // Сохраняем изображения в массив
             } else {
-                data[key] = value;
+                data[key] = value; // Сохраняем остальные данные
             }
         });
+
+        // Проверяем, есть ли изображения
+        if (!data.images.length) {
+            console.error('No images found in data:', data); // Логируем, если изображения отсутствуют
+            return NextResponse.json({ error: 'No images provided' }, { status: 400 });
+        }
 
         // Функция для загрузки изображения в Cloudinary
         const uploadImage = (file: File) => {
@@ -92,8 +99,8 @@ export async function POST(req: Request) {
                 yearOfConstruction: data.yearOfConstruction,
                 gpsCoordinates: data.gpsCoordinates,
                 address: data.address,
-                completionRate: parseInt(data.completionRate, 10),
-                technicalDetails: data.technicalDetails,
+                completionRate: parseInt(data.completionRate, 10) || null, // Убедитесь, что значение является числом
+                technicalDetails: data.technicalDetails || null,
                 structuralCharacteristics: undefined,
                 additionalInformation: undefined,
                 creatorId,

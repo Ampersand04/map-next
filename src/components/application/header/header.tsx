@@ -84,7 +84,7 @@ const Header: React.FC<Props> = ({ setSelectedObjectId, setIsPanelOpen }) => {
 
     return (
         <header
-            className={`fixed z-10 transition-all duration-500 top-0 left-0 right-0 bg-white shadow-md flex min-h-[73px] max-h-[73px] max-md:px-6 max-md:py-4 px-20 py-3`}>
+            className={`fixed z-30 transition-all duration-500 top-0 left-0 right-0 bg-white shadow-md flex min-h-[73px] max-h-[73px] max-md:px-6 max-md:py-4 px-20 py-3`}>
             <div className="flex flex-grow items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                     <Image className="" width={15} height={15} src={'/logo-blue.png'} alt="logo" />
