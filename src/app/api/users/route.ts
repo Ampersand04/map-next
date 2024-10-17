@@ -1,4 +1,3 @@
-// src/app/api/users/route.ts
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma'; // Импортируйте ваш экземпляр Prisma
 import { v2 as cloudinary } from 'cloudinary';
@@ -34,6 +33,34 @@ export async function POST(req: Request) {
     } catch (error) {
         console.error('Error creating user:', error);
         return NextResponse.json({ error: 'Error creating user' }, { status: 500 });
+    }
+}
+
+// PUT-запрос для обновления пользователя
+export async function PUT(req: Request) {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+        return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+    }
+
+    try {
+        const formData = await req.formData(); // Получаем данные из тела запроса
+        const updateData = Object.fromEntries(formData); // Преобразуем FormData в объект
+
+        if (updateData.password === '') {
+            delete updateData.password; // Не обновляем пароль, если поле пустое
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: { id },
+            data: updateData, // Обновляем пользователя
+        });
+
+        return NextResponse.json(updatedUser, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ error: 'Error updating user' }, { status: 500 });
     }
 }
 

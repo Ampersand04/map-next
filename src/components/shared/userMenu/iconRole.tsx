@@ -17,13 +17,15 @@ export const IconRole = () => {
                 alt="Profile Image"
             />
 
-            <Image
-                src={isAdmin ? '/admin-icon.svg' : isManager ? '/manager-icon.svg' : ''}
-                width={16}
-                height={16}
-                className="absolute bottom-0 right-0 min-h-4 min-w-4"
-                alt="Profile Image"
-            />
+            {(isAdmin || isManager) && (
+                <Image
+                    src={isAdmin ? '/admin-icon.svg' : isManager ? '/manager-icon.svg' : ''}
+                    width={16}
+                    height={16}
+                    className="absolute bottom-0 right-0 min-h-4 min-w-4"
+                    alt="Profile Image"
+                />
+            )}
         </div>
     );
 };

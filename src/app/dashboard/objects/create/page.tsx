@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui';
 import { DatePicker, Input, InputNumber, Select } from 'antd';
 import dayjs from 'dayjs';
+import { ObjectType } from '@prisma/client';
 
 const { Option } = Select;
 
@@ -134,14 +135,56 @@ const CreateObjectPage: React.FC = () => {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {/* Object Type */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Type</label>
+                            <label className="block text-sm font-medium text-gray-700">
+                                Тип объекта
+                            </label>
 
                             <Select
                                 placeholder="Выбрать"
                                 style={{ width: '100%' }}
                                 onChange={(value) => handleSelectChange('type', value)}>
-                                <Option value="RESIDENTIAL">Жилой дом</Option>
-                                <Option value="INDUSTRIAL">Культурный объект</Option>
+                                <Option value={ObjectType.RESIDENTIAL}>Жилой дом</Option>
+                                <Option value={ObjectType.PUBLIC_OFFICE}>
+                                    Общественное или административно-офисное помещение
+                                </Option>
+                                <Option value={ObjectType.EDUCATIONAL}>
+                                    Учреждение образования
+                                </Option>
+                                <Option value={ObjectType.HEALTHCARE}>Здравоохранение</Option>
+                                <Option value={ObjectType.TRADE}>
+                                    Объект торгового назначения
+                                </Option>
+                                <Option value={ObjectType.CULTURAL}>Культурный объект</Option>
+                                <Option value={ObjectType.CATERING}>
+                                    Предприятие общественного питания
+                                </Option>
+                                <Option value={ObjectType.INDUSTRIAL}>
+                                    Объект производственного назначения
+                                </Option>
+                                <Option value={ObjectType.URBAN_INFRASTRUCTURE}>
+                                    Объект городской инфраструктуры
+                                </Option>
+                                <Option value={ObjectType.TRANSPORT_INFRASTRUCTURE}>
+                                    Транспортная инфраструктура
+                                </Option>
+                                <Option value={ObjectType.RELIGIOUS}>Религиозное сооружение</Option>
+                                <Option value={ObjectType.CIVIL_DEFENSE}>
+                                    Объект защиты населения
+                                </Option>
+                                <Option value={ObjectType.WAREHOUSE}>
+                                    Объект складского назначения
+                                </Option>
+                                <Option value={ObjectType.NON_RESIDENTIAL}>
+                                    Нежилое помещение
+                                </Option>
+                                <Option value={ObjectType.COMPLEX_DEVELOPMENT}>
+                                    Комплексная застройка
+                                </Option>
+                                <Option value={ObjectType.TEMPORARY}>Временный объект</Option>
+                                <Option value={ObjectType.UNFINISHED_CONSTRUCTION}>
+                                    Объект незавершенного строительства
+                                </Option>
+                                <Option value={ObjectType.OTHER}>Прочее</Option>
                             </Select>
                             {/* <input
                                 type="text"
@@ -154,7 +197,9 @@ const CreateObjectPage: React.FC = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">name</label>
+                            <label className="block text-sm font-medium text-gray-700">
+                                Название
+                            </label>
                             <Input
                                 name="name"
                                 value={formData.name}
@@ -171,7 +216,7 @@ const CreateObjectPage: React.FC = () => {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                yearOfConstruction
+                                Год постройки
                             </label>
                             <DatePicker
                                 onChange={handleDateChange}
@@ -182,7 +227,7 @@ const CreateObjectPage: React.FC = () => {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                gpsCoordinates
+                                Координаты объеккта
                             </label>
 
                             <Input
@@ -201,7 +246,7 @@ const CreateObjectPage: React.FC = () => {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                completionRate
+                                Процент готовности
                             </label>
                             <InputNumber
                                 type="number"
@@ -222,9 +267,7 @@ const CreateObjectPage: React.FC = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                                address
-                            </label>
+                            <label className="block text-sm font-medium text-gray-700">Адрес</label>
                             <Input
                                 name="address"
                                 value={formData.address}
@@ -242,7 +285,7 @@ const CreateObjectPage: React.FC = () => {
                         {/* Technical Details */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                Technical Details
+                                Технические характеристики
                             </label>
                             <textarea
                                 name="technicalDetails"
@@ -255,7 +298,7 @@ const CreateObjectPage: React.FC = () => {
                         {/* Structural Characteristics */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                Structural Characteristics
+                                Конструктивные характеристики
                             </label>
                             <textarea
                                 name="structuralCharacteristics"
@@ -268,7 +311,7 @@ const CreateObjectPage: React.FC = () => {
                         {/* Additional Information */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                Additional Information
+                                Дополнительная информация
                             </label>
                             <textarea
                                 name="additionalInformation"
@@ -280,7 +323,7 @@ const CreateObjectPage: React.FC = () => {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                Images
+                                Фото объеккта
                             </label>
                             <input
                                 type="file"
@@ -296,7 +339,7 @@ const CreateObjectPage: React.FC = () => {
                             <button
                                 type="submit"
                                 className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600">
-                                Create Object
+                                Создать объект
                             </button>
                         </div>
                     </form>

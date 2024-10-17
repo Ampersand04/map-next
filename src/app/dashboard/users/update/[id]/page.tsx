@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation'; // useParams для получения id
 import { Button } from '@/components/ui';
 
 interface FormData {
@@ -13,18 +13,7 @@ interface FormData {
     role: string;
 }
 
-// Dummy data for aside menu (You can adjust this)
-const menu = [
-    { title: 'Create User', pageUrl: '/users/create' },
-    { title: 'Dashboard', pageUrl: '/dashboard' },
-];
-
-interface CreateUserPageProps {
-    pageName: string;
-    backLink: string;
-}
-
-const CreateUserPage: React.FC<CreateUserPageProps> = (pageName, backLink) => {
+const UpdateUserPage: React.FC = () => {
     const [formData, setFormData] = useState<FormData>({
         name: '',
         email: '',
@@ -35,6 +24,34 @@ const CreateUserPage: React.FC<CreateUserPageProps> = (pageName, backLink) => {
     });
 
     const router = useRouter();
+    const params = useParams(); // Используем useParams для получения id из URL
+    const userId = params.id; // Извлекаем id пользователя
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (userId) {
+                try {
+                    const res = await fetch(`/api/users`);
+                    if (!res.ok) {
+                        throw new Error('Failed to fetch user data');
+                    }
+                    const userData = await res.json();
+                    setFormData({
+                        name: userData.name,
+                        email: userData.email,
+                        phoneNumber: userData.phoneNumber,
+                        password: '', // Оставляем пустым для безопасности
+                        image: null, // Оставляем пустым для изображения
+                        role: userData.role,
+                    });
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            }
+        };
+
+        fetchUserData();
+    }, [userId]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({
@@ -48,7 +65,7 @@ const CreateUserPage: React.FC<CreateUserPageProps> = (pageName, backLink) => {
         if (files && files.length > 0) {
             setFormData({
                 ...formData,
-                image: files[0], // Set the first selected file
+                image: files[0], // Добавляем выбранный файл
             });
         }
     };
@@ -59,35 +76,32 @@ const CreateUserPage: React.FC<CreateUserPageProps> = (pageName, backLink) => {
         const data = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
             if (key === 'image' && value) {
-                data.append(key, value); // Append the file
-            } else {
-                data.append(key, value as string); // Append other fields as strings
+                data.append(key, value); // Добавляем файл
+            } else if (key !== 'password' || (key === 'password' && value)) {
+                data.append(key, value as string);
             }
         });
 
         try {
-            const res = await fetch('/api/users', {
-                method: 'POST',
-                // Remove the Content-Type header
-                body: data, // Send the form data directly
+            const res = await fetch(`/api/users?id=${userId}`, {
+                method: 'PUT',
+                body: data,
             });
 
             if (res.ok) {
-                // Redirect to user list or success page
-                router.push('/dashboard/users');
+                router.push('/dashboard/users'); // Перенаправляем после успешного обновления
             } else {
                 const errorData = await res.json();
-                console.error('Failed to create user:', errorData.error);
+                console.error('Failed to update user:', errorData.error);
             }
-            router.replace('/dashboard/users');
         } catch (error) {
-            console.error('Error creating user:', error);
+            console.error('Error updating user:', error);
         }
     };
 
     return (
         <div className="rounded-lg p-3 w-full h-full">
-            <div className=" justify-between items-center pt-6">
+            <div className="justify-between items-center pt-6">
                 <Button
                     className="absolute top-5"
                     href="/dashboard/users"
@@ -96,11 +110,10 @@ const CreateUserPage: React.FC<CreateUserPageProps> = (pageName, backLink) => {
                     size="small">
                     Назад
                 </Button>
-                <h2 className="text-xl font-bold">Создание пользователя</h2>
+                <h2 className="text-xl font-bold">Обновление пользователя</h2>
             </div>
 
             <div className="bg-white my-5 p-5 rounded-lg">
-                {/* Form to create user */}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Name */}
                     <div>
@@ -145,31 +158,30 @@ const CreateUserPage: React.FC<CreateUserPageProps> = (pageName, backLink) => {
 
                     {/* Password */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Пароль</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Пароль (оставьте пустым, если не хотите менять)
+                        </label>
                         <input
                             type="password"
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
                             className="mt-1 block w-[300px] p-2 border border-gray-300 rounded-md"
-                            required
                         />
                     </div>
 
                     {/* Role */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                            Тип пользователя
-                        </label>
+                        <label className="block text-sm font-medium text-gray-700">Роль</label>
                         <select
                             name="role"
                             value={formData.role}
-                            onChange={() => handleChange}
+                            onChange={handleChange}
                             className="mt-1 block w-[300px] p-2 border border-gray-300 rounded-md"
                             required>
                             <option value="USER">Обычный</option>
                             <option value="MANAGER">Менеджер</option>
-                            <option value="ADMIN">Администратов</option>
+                            <option value="ADMIN">Администратор</option>
                         </select>
                     </div>
 
@@ -189,7 +201,7 @@ const CreateUserPage: React.FC<CreateUserPageProps> = (pageName, backLink) => {
                         <button
                             type="submit"
                             className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600">
-                            Создать пользователя
+                            Обновить пользователя
                         </button>
                     </div>
                 </form>
@@ -198,4 +210,4 @@ const CreateUserPage: React.FC<CreateUserPageProps> = (pageName, backLink) => {
     );
 };
 
-export default CreateUserPage;
+export default UpdateUserPage;

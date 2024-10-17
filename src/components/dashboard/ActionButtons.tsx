@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { ActionButtonsProps } from './ActionButtons.interface';
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({ objectId, onDelete }) => {
-    // Добавляем onDelete как пропс
     const router = useRouter();
 
     // Функция для удаления объекта

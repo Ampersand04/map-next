@@ -121,22 +121,23 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                         )}
                     </div>
 
-                    {/* Индикаторы слайдов */}
-                    <div className="flex justify-center items-center gap-1 w-full">
-                        {images.map((_, index) => (
-                            <div
-                                key={index}
-                                onClick={() => {
-                                    setCurrentSlide(index);
-                                }}
-                                className={`h-2 w-2 rounded-md ${
-                                    currentSlide === index
-                                        ? 'bg-text-secondary'
-                                        : 'bg-gray-secondary'
-                                }`}
-                            />
-                        ))}
-                    </div>
+                    {selectedObject?.images.length > 1 && (
+                        <div className="flex justify-center items-center gap-1 w-full">
+                            {images.map((_, index) => (
+                                <div
+                                    key={index}
+                                    onClick={() => {
+                                        setCurrentSlide(index);
+                                    }}
+                                    className={`h-2 w-2 rounded-md ${
+                                        currentSlide === index
+                                            ? 'bg-text-secondary'
+                                            : 'bg-gray-secondary'
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Основные характеристики */}
