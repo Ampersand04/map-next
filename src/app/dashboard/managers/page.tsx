@@ -5,6 +5,7 @@ import { Table } from 'antd';
 import { Manager } from '@/components/dashboard/manager.iterface';
 import UserActionButtons from '@/components/dashboard/UserActionButtons';
 import DashboardPage from '@/components/dashboard/dashboard-page';
+import dayjs from 'dayjs';
 
 const ManagersPage = () => {
     const [dataSource, setDataSource] = useState<Manager[]>([]);
@@ -39,6 +40,9 @@ const ManagersPage = () => {
             title: 'Дата создания',
             dataIndex: 'createdAt',
             key: 'createdAt',
+            render: (createdAt: Date | string): JSX.Element => (
+                <p>{dayjs(createdAt).format('DD.MM.YYYY')}</p>
+            ),
         },
         {
             title: 'Имя',

@@ -7,6 +7,7 @@ import DashboardPage from '@/components/dashboard/dashboard-page';
 import UserActionButtons from '@/components/dashboard/UserActionButtons';
 import { RoleGate } from '@/components/auth/role-gate';
 import { Role } from '@prisma/client';
+import dayjs from 'dayjs';
 
 const UsersPage = () => {
     const [dataSource, setDataSource] = useState<User[]>([]);
@@ -69,6 +70,9 @@ const UsersPage = () => {
             title: 'Дата создания',
             dataIndex: 'createdAt',
             key: 'createdAt',
+            render: (createdAt: Date | string): JSX.Element => (
+                <p>{dayjs(createdAt).format('DD.MM.YYYY')}</p>
+            ),
         },
         {
             title: '',

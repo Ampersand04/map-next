@@ -45,9 +45,9 @@ const DashboardInputSearch: React.FC<DashboardInputSearchProps> = ({
                 </div>
             )}
             {/* Filter Icon aligned outside the input */}
-            <div className="absolute -right-8 cursor-pointer">
+            {/* <div className="absolute -right-8 cursor-pointer">
                 <Image src="/filter.svg" alt="Filter Icon" width={16} height={16} />
-            </div>
+            </div> */}
         </div>
     );
 };

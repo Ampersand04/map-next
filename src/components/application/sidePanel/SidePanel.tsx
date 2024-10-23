@@ -188,18 +188,8 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                         content={
                             <div className="flex flex-col gap-2.5">
                                 <DefaultContentLine
-                                    name="Адрес"
-                                    content={selectedObject?.address || 'Нет данных'}
-                                />
-
-                                <DefaultContentLine
-                                    name="Координаты"
-                                    content={selectedObject?.gpsCoordinates || 'Нет данных'}
-                                />
-
-                                <DefaultContentLine
-                                    name="Процент готовности объекта"
-                                    content={selectedObject?.completionRate || 'Нет данных'}
+                                    name="Технические характеристики"
+                                    content={selectedObject?.technicalDetails || 'Нет данных'}
                                 />
                             </div>
                         }
@@ -209,18 +199,10 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                         content={
                             <div className="flex flex-col gap-2.5">
                                 <DefaultContentLine
-                                    name="Адрес"
-                                    content={selectedObject?.address || 'Нет данных'}
-                                />
-
-                                <DefaultContentLine
-                                    name="Координаты"
-                                    content={selectedObject?.gpsCoordinates || 'Нет данных'}
-                                />
-
-                                <DefaultContentLine
-                                    name="Процент готовности объекта"
-                                    content={selectedObject?.completionRate || 'Нет данных'}
+                                    name="Конструктивные характеристики"
+                                    content={
+                                        selectedObject?.structuralCharacteristics || 'Нет данных'
+                                    }
                                 />
                             </div>
                         }

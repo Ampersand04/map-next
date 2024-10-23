@@ -6,6 +6,7 @@ import { Button } from '@/components/ui';
 import { DatePicker, Input, InputNumber, Select } from 'antd';
 import dayjs from 'dayjs';
 import { ObjectType } from '@prisma/client';
+import { toast } from 'sonner';
 
 const { Option } = Select;
 
@@ -108,10 +109,13 @@ const CreateObjectPage: React.FC = () => {
             if (res.ok) {
                 // Redirect to dashboard or success page
                 router.push('/dashboard/objects');
+                toast.success('Объект создан!');
             } else {
+                toast.error('Ошибка при создании объекта');
                 console.error('Failed to create object');
             }
         } catch (error) {
+            toast.error('Ошибка сервера!');
             console.error('Error creating object:', error);
         }
     };

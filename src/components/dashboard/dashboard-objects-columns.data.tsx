@@ -32,6 +32,14 @@ export const columns: ColumnType<ObjectData>[] = [
         title: 'Статус',
         dataIndex: 'status',
         key: 'status',
+        filters: [
+            { text: 'Опубликован', value: 'Опубликован' },
+            { text: 'В архиве', value: 'В архиве' },
+        ],
+        onFilter: (value, record) => {
+            const statusText = record.status ? 'В архиве' : 'Опубликован';
+            return statusText === value;
+        },
         render: (status: boolean) => (
             <span className={status ? 'text-red-500' : 'text-green-500'}>
                 {status ? 'В архиве' : 'Опубликован'}
@@ -42,11 +50,13 @@ export const columns: ColumnType<ObjectData>[] = [
         title: 'Наименование',
         dataIndex: 'name',
         key: 'name',
+        sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
         title: 'Назначение',
         dataIndex: 'type',
         key: 'type',
+        sorter: (a, b) => a.type.localeCompare(b.type),
         render: (type: string) => <span>{objectTypeConvert(type)}</span>,
     },
     {
