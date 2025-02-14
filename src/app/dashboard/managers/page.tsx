@@ -1,11 +1,11 @@
 // ManagersPage.tsx
-'use client';
-import { useEffect, useState } from 'react';
-import { Table } from 'antd';
-import { Manager } from '@/components/dashboard/manager.iterface';
-import UserActionButtons from '@/components/dashboard/UserActionButtons';
-import DashboardPage from '@/components/dashboard/dashboard-page';
-import dayjs from 'dayjs';
+"use client";
+import { useEffect, useState } from "react";
+import { Table } from "antd";
+import { Manager } from "@/components/dashboard/manager.iterface";
+import UserActionButtons from "@/components/dashboard/UserActionButtons";
+import DashboardPage from "@/components/dashboard/dashboard-page";
+import dayjs from "dayjs";
 
 const ManagersPage = () => {
     const [dataSource, setDataSource] = useState<Manager[]>([]);
@@ -14,16 +14,16 @@ const ManagersPage = () => {
     useEffect(() => {
         const fetchManagers = async () => {
             try {
-                const response = await fetch('/api/managers');
+                const response = await fetch("/api/managers");
                 if (!response.ok) {
-                    throw new Error('Failed to fetch managers');
+                    throw new Error("Failed to fetch managers");
                 }
 
                 const data = await response.json();
                 setDataSource(data);
                 setTotalItems(data.length);
             } catch (error) {
-                console.error('Error fetching managers:', error);
+                console.error("Error fetching managers:", error);
             }
         };
 
@@ -37,37 +37,37 @@ const ManagersPage = () => {
 
     const columns = [
         {
-            title: 'Дата создания',
-            dataIndex: 'createdAt',
-            key: 'createdAt',
+            title: "Дата создания",
+            dataIndex: "createdAt",
+            key: "createdAt",
             render: (createdAt: Date | string): JSX.Element => (
-                <p>{dayjs(createdAt).format('DD.MM.YYYY')}</p>
+                <p>{dayjs(createdAt).format("DD.MM.YYYY")}</p>
             ),
         },
         {
-            title: 'Имя',
-            dataIndex: 'name',
-            key: 'name',
+            title: "Имя",
+            dataIndex: "name",
+            key: "name",
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
         },
         {
-            title: 'Телефон',
-            dataIndex: 'phoneNumber',
-            key: 'phoneNumber',
+            title: "Телефон",
+            dataIndex: "phoneNumber",
+            key: "phoneNumber",
         },
         {
-            title: 'Количество объектов',
-            dataIndex: 'objectCount',
-            key: 'objectCount',
+            title: "Количество объектов",
+            dataIndex: "objectCount",
+            key: "objectCount",
         },
         {
-            title: 'Действия',
-            fixed: 'right' as const,
-            key: 'actions',
+            title: "Действия",
+            fixed: "right" as const,
+            key: "actions",
             render: (record: Manager) => (
                 <UserActionButtons objectId={record.id} onDelete={handleDelete} />
             ),

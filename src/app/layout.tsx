@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Raleway } from 'next/font/google';
 import './globals.css';
-import { QueryClientProviderWrapper } from '@/providers/queryClientProviderWrapper';
 import { SessionProviderComponent } from '@/providers/sessionProvider';
 import { Toaster } from 'sonner';
 
@@ -21,10 +20,10 @@ export default function RootLayout({
         <html lang="ru" className="!scroll-smooth">
             <body className={raleway.className}>
                 <SessionProviderComponent>
-                    <QueryClientProviderWrapper>
-                        <Toaster position="top-center" richColors />
-                        <div>{children}</div>
-                    </QueryClientProviderWrapper>
+                    {/* <QueryClientProviderWrapper> */}
+                    <Toaster position="top-center" richColors />
+                    <div className={raleway.className}>{children}</div>
+                    {/* </QueryClientProviderWrapper> */}
                 </SessionProviderComponent>
             </body>
         </html>

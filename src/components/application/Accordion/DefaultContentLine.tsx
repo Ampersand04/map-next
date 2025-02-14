@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface DefaultContentLineProps {
     name?: string;
@@ -7,7 +7,7 @@ interface DefaultContentLineProps {
 
 const DefaultContentLine: React.FC<DefaultContentLineProps> = ({ name, content }) => {
     return (
-        <div>
+        <div className="transition-all duration-500">
             <p className="text-xs text-text-secondary">{name}</p>
             <p className="text-sm text-text  font-semibold">{content}</p>
         </div>

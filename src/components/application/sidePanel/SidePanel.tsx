@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { ObjectContext } from '@/providers/objectsProvider';
-import Image from 'next/image';
-import React, { useContext, useState } from 'react';
-import Accordion from '../Accordion/Accordion';
-import { Spin } from 'antd';
-import DefaultContentLine from '../Accordion/DefaultContentLine';
-import { objectTypeConvert } from '@/lib/objextTypeConvert';
-import dayjs from 'dayjs';
+import { ObjectContext } from "@/providers/objectsProvider";
+import Image from "next/image";
+import React, { useContext, useState } from "react";
+import Accordion from "../Accordion/Accordion";
+import { Spin } from "antd";
+import DefaultContentLine from "../Accordion/DefaultContentLine";
+import { objectTypeConvert } from "@/lib/objextTypeConvert";
+import dayjs from "dayjs";
 
 interface ObjectData {
     id: string;
@@ -38,7 +38,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
     if (!selectedObject) return null;
 
     // Слайдер изображений
-    const images = selectedObject?.images || ['/default-image.png']; // Используем дефолтное изображение, если нет картинок
+    const images = selectedObject?.images || ["/default-image.png"]; // Используем дефолтное изображение, если нет картинок
 
     const openModal = (index: number) => {
         setCurrentSlide(index);
@@ -59,8 +59,8 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
 
     return (
         <aside
-            className={`text-text fixed ${
-                dashboard ? 'top-0 right-0 h-[100%]' : 'top-[73px] left-0 h-[calc(100%-73px)]'
+            className={`transition-all duration-500 text-text fixed ${
+                dashboard ? "top-0 right-0 h-[100%]" : "top-[73px] left-0 h-[calc(100%-73px)]"
             } z-10 w-[450px] bg-white shadow-lg rounded-lg overflow-y-scroll`}
             onClick={(e) => {
                 e.stopPropagation();
@@ -68,13 +68,13 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
             <div className="flex flex-col gap-4 p-5">
                 <div className="flex justify-between items-center w-full">
                     <div className="flex items-center gap-2">
-                        <Image src={'/industrial-icon.svg'} alt="" width={30} height={30} />
+                        <Image src={"/industrial-icon.svg"} alt="" width={30} height={30} />
                         <p className="text-text-secondary text-sm font-semibold">
                             {objectTypeConvert(selectedObject?.type)}
                         </p>
                     </div>
                     <Image
-                        src={'/clear.svg'}
+                        src={"/clear.svg"}
                         alt=""
                         width={16}
                         height={16}
@@ -90,7 +90,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                         className="bg-text h-[220px] w-full flex items-center justify-center relative rounded-lg overflow-hidden"
                         onClick={() => openModal(currentSlide)}>
                         <Image
-                            src={images[currentSlide] || '/default-image.png'}
+                            src={images[currentSlide] || "/default-image.png"}
                             alt={`Image ${currentSlide + 1}`}
                             layout="fill"
                             objectFit="cover"
@@ -131,8 +131,8 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                                     }}
                                     className={`h-2 w-2 rounded-md ${
                                         currentSlide === index
-                                            ? 'bg-text-secondary'
-                                            : 'bg-gray-secondary'
+                                            ? "bg-text-secondary"
+                                            : "bg-gray-secondary"
                                     }`}
                                 />
                             ))}
@@ -143,7 +143,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                 {/* Основные характеристики */}
                 <div className="flex flex-col gap-4 text-text">
                     <h2 className="text-xl font-bold">
-                        {selectedObject?.name || 'Неизвестный объект'}
+                        {selectedObject?.name || "Неизвестный объект"}
                     </h2>
 
                     <Accordion
@@ -160,24 +160,24 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                                     name="Год постройки/ввода в эксплуатацию"
                                     content={
                                         dayjs(selectedObject?.yearOfConstruction).format(
-                                            'DD.MM.YYYY',
-                                        ) || 'Нет данных'
+                                            "DD.MM.YYYY",
+                                        ) || "Нет данных"
                                     }
                                 />
 
                                 <DefaultContentLine
                                     name="Адрес"
-                                    content={selectedObject?.address || 'Нет данных'}
+                                    content={selectedObject?.address || "Нет данных"}
                                 />
 
                                 <DefaultContentLine
                                     name="Координаты"
-                                    content={selectedObject?.gpsCoordinates || 'Нет данных'}
+                                    content={selectedObject?.gpsCoordinates || "Нет данных"}
                                 />
 
                                 <DefaultContentLine
                                     name="Процент готовности объекта"
-                                    content={selectedObject?.completionRate || 'Нет данных'}
+                                    content={selectedObject?.completionRate || "Нет данных"}
                                 />
                             </div>
                         }
@@ -189,7 +189,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                             <div className="flex flex-col gap-2.5">
                                 <DefaultContentLine
                                     name="Технические характеристики"
-                                    content={selectedObject?.technicalDetails || 'Нет данных'}
+                                    content={selectedObject?.technicalDetails || "Нет данных"}
                                 />
                             </div>
                         }
@@ -201,7 +201,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                                 <DefaultContentLine
                                     name="Конструктивные характеристики"
                                     content={
-                                        selectedObject?.structuralCharacteristics || 'Нет данных'
+                                        selectedObject?.structuralCharacteristics || "Нет данных"
                                     }
                                 />
                             </div>
@@ -214,7 +214,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                 <div className="fixed inset-0 z-40 bg-black bg-opacity-75 flex items-center justify-center">
                     <div className="relative w-[90%] h-[70%]">
                         <Image
-                            src={images[currentSlide] || '/default-image.png'}
+                            src={images[currentSlide] || "/default-image.png"}
                             alt={`Full image ${currentSlide + 1}`}
                             layout="fill"
                             objectFit="contain"
@@ -236,7 +236,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ selectedObjectId, onClose, dashbo
                         <button
                             className="absolute top-4 right-4 text-white text-2xl z-50"
                             onClick={closeModal}>
-                            <Image src={'/close.png'} alt="" width={20} height={20} />
+                            <Image src={"/close.png"} alt="" width={20} height={20} />
                         </button>
                     </div>
                 </div>

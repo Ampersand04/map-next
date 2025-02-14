@@ -1,9 +1,10 @@
-import bcrypt from 'bcryptjs';
-import { userService } from '../service/user.service';
-import { RegisterSchema } from '@/schemas';
-import { z } from 'zod';
-import { prisma } from '@/lib/prisma';
-import { useRouter } from 'next/navigation';
+import bcrypt from "bcrypt";
+// import bcrypt from "bcryptjs";
+import { userService } from "../service/user.service";
+import { RegisterSchema } from "@/schemas";
+import { z } from "zod";
+import { prisma } from "@/lib/prisma";
+import { useRouter } from "next/navigation";
 
 // This function handles user registration logic
 export const create = async (values: z.infer<typeof RegisterSchema>) => {
@@ -11,7 +12,7 @@ export const create = async (values: z.infer<typeof RegisterSchema>) => {
     console.log(values);
 
     if (!validatedFields.success) {
-        return { error: 'Заполните поля!' };
+        return { error: "Заполните поля!" };
     }
 
     const { email, password, name } = validatedFields.data;
@@ -20,15 +21,15 @@ export const create = async (values: z.infer<typeof RegisterSchema>) => {
     const existingUser = await userService.getUserByEmail(email);
 
     if (existingUser) {
-        console.log('Email уже используется');
-        return { error: 'Email уже используется' };
+        console.log("Email уже используется");
+        return { error: "Email уже используется" };
     }
 
     await prisma.user.create({
-        data: { name, email, password: hashedPassword, image: '' },
+        data: { name, email, password: hashedPassword, image: "" },
     });
 
-    console.log('Пользователь создан');
+    console.log("Пользователь создан");
 
-    return { success: 'Пользователь создан' };
+    return { success: "Пользователь создан" };
 };

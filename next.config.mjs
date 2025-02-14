@@ -9,7 +9,7 @@ const nextConfig = {
         return config;
     },
     images: {
-        domains: ['lh3.googleusercontent.com', 'res.cloudinary.com'], // Add allowed image domain
+        domains: ['lh3.googleusercontent.com', 'res.cloudinary.com', 'fonts.google.com'], // Add allowed image domain
     },
 };
 

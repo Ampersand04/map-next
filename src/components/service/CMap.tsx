@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useState } from 'react';
+import React, { useContext, useCallback, useState } from "react";
 import {
     YMap,
     YMapMarker,
@@ -8,15 +8,18 @@ import {
     YMapCustomClusterer,
     YMapDefaultMarker,
     YMapListener,
-} from 'ymap3-components';
-import { DomEventHandler, LngLat } from '@yandex/ymaps3-types';
-import './styles.scss';
-import { apiKey, location } from './helpers';
-import { ObjectContext } from '@/providers/objectsProvider';
-import SidePanel from '../application/sidePanel/SidePanel';
-import Image from 'next/image';
-import { Spin } from 'antd';
-import dayjs from 'dayjs';
+    YMapHintContext,
+    YMapHint,
+} from "ymap3-components";
+import { DomEventHandler, LngLat } from "@yandex/ymaps3-types";
+import "./styles.scss";
+import { apiKey, location } from "./helpers";
+import { ObjectContext } from "@/providers/objectsProvider";
+import SidePanel from "../application/sidePanel/SidePanel";
+import Image from "next/image";
+import { Spin } from "antd";
+import dayjs from "dayjs";
+import { ObjectType } from "@prisma/client";
 
 interface ObjectData {
     id: string;
@@ -71,18 +74,64 @@ const CMap = ({ setSelectedObjectId }: { setSelectedObjectId: any }) => {
         return true;
     });
 
+    const iconMap = (type: ObjectType): string => {
+        switch (type) {
+            case ObjectType.RESIDENTIAL:
+                return "/residential-icon.svg";
+            case ObjectType.PUBLIC_OFFICE:
+                return "/public-office-icon.svg";
+            case ObjectType.EDUCATIONAL:
+                return "/educational-icon.svg";
+            case ObjectType.HEALTHCARE:
+                return "/healthcare-icon.svg";
+            case ObjectType.TRADE:
+                return "/trade-icon.svg";
+            case ObjectType.CULTURAL:
+                return "/cultural-icon.svg";
+            case ObjectType.CATERING:
+                return "/catering-icon.svg";
+            case ObjectType.INDUSTRIAL:
+                return "/industrial-icon.svg";
+            case ObjectType.URBAN_INFRASTRUCTURE:
+                return "/urban-infrastructure-icon.svg";
+            case ObjectType.TRANSPORT_INFRASTRUCTURE:
+                return "/transport-infrastructure-icon.svg";
+            case ObjectType.RELIGIOUS:
+                return "/religious-icon.svg";
+            case ObjectType.CIVIL_DEFENSE:
+                return "/civil-defense-icon.svg";
+            case ObjectType.WAREHOUSE:
+                return "/warehouse-icon.svg";
+            case ObjectType.NON_RESIDENTIAL:
+                return "/non-residential-icon.svg";
+            case ObjectType.COMPLEX_DEVELOPMENT:
+                return "/complex-development-icon.svg";
+            case ObjectType.TEMPORARY:
+                return "/temporary-icon.svg";
+            case ObjectType.UNFINISHED_CONSTRUCTION:
+                return "/unfinished-construction-icon.svg";
+            case ObjectType.OTHER:
+            default:
+                return "/other-icon.svg";
+        }
+    };
+
     // Преобразуем данные объектов в точки для карты
     const points = filteredObjects
         ?.filter((item) => item.gpsCoordinates !== null)
         ?.map((item) => {
             if (item.gpsCoordinates) {
-                const [latitude, longitude] = item.gpsCoordinates.split(',').map(Number); // Извлекаем координаты
+                const [latitude, longitude] = item.gpsCoordinates.split(",").map(Number); // Извлекаем координаты
                 return {
-                    type: 'Feature',
+                    type: "Feature",
                     id: String(item.id),
+                    objectType: item.type,
                     geometry: {
-                        type: 'Point',
+                        type: "Point",
                         coordinates: [longitude, latitude], // Меняем местами широту и долготу
+                    },
+                    properties: {
+                        hint: { title: item.name, text: "Дополнительная информация" }, // Содержимое подсказки
                     },
                 };
             }
@@ -90,8 +139,10 @@ const CMap = ({ setSelectedObjectId }: { setSelectedObjectId: any }) => {
         })
         .filter((point): point is Feature => point !== null);
 
-    const marker = useCallback(
-        (feature: any) => (
+    const marker = useCallback((feature: any) => {
+        // console.log(objectType);
+
+        return (
             <YMapMarker
                 key={feature.id}
                 coordinates={feature.geometry.coordinates}
@@ -101,15 +152,14 @@ const CMap = ({ setSelectedObjectId }: { setSelectedObjectId: any }) => {
                     // onMouseOver={() => markerMouseOver(feature.id)}
                     // onMouseOut={() => markerMouseOut(feature.id)}
                 >
-                    <div className={`${feature.name ? 'visible' : 'hidden'}`}>{[feature.name]}</div>
+                    <div className={`${feature.name ? "visible" : "hidden"}`}>{[feature.name]}</div>
                     <div className="w-10 h-10 rounded-3xl border-2 border-blue-main">
-                        <Image src={'/industrial-icon.svg'} alt="" width={40} height={40} />
+                        <Image src={iconMap(feature.objectType)} alt="" width={40} height={40} />
                     </div>
                 </div>
             </YMapMarker>
-        ),
-        [],
-    );
+        );
+    }, []);
 
     console.log(points);
     const cluster = useCallback(
@@ -117,16 +167,16 @@ const CMap = ({ setSelectedObjectId }: { setSelectedObjectId: any }) => {
             <YMapMarker coordinates={coordinates}>
                 <span
                     style={{
-                        borderRadius: '50%',
-                        background: '#406BDC',
-                        color: 'white',
+                        borderRadius: "50%",
+                        background: "#406BDC",
+                        color: "white",
                         width: 42,
                         height: 42,
-                        outline: 'solid 3px #406BDC',
-                        outlineOffset: '3px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        outline: "solid 3px #406BDC",
+                        outlineOffset: "3px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
                     }}>
                     {features.length}
                 </span>
@@ -135,13 +185,26 @@ const CMap = ({ setSelectedObjectId }: { setSelectedObjectId: any }) => {
         [],
     );
 
+    function HintWindow(feature: any) {
+        const hintContext = useContext(YMapHintContext) as unknown as {
+            hint: { title: string; text: string };
+        };
+
+        return hintContext ? (
+            <div className="hint_window">
+                <div className="hint_window__title">{feature.type}</div>
+                {/* <div>{hintContext.hint.text}</div> */}
+            </div>
+        ) : null;
+    }
+
     const onMouseClick: DomEventHandler = useCallback((event) => {
         setMarkerActive(true);
     }, []);
 
     if (loading) {
         return (
-            <div className="w-full flex justify-center items-center" style={{ height: '100vh' }}>
+            <div className="w-full flex justify-center items-center" style={{ height: "100vh" }}>
                 <Spin />
             </div>
         );
@@ -158,6 +221,12 @@ const CMap = ({ setSelectedObjectId }: { setSelectedObjectId: any }) => {
                 />
                 <YMapDefaultSchemeLayer />
                 <YMapDefaultFeaturesLayer />
+                <YMapHint
+                    hint={(feature) =>
+                        feature?.properties !== undefined && feature.properties.hint
+                    }>
+                    <HintWindow />
+                </YMapHint>
                 <YMapListener onClick={onMouseClick} />
             </YMap>
         </YMapComponentsProvider>

@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
 
 interface AccordionProps {
     title: string;
@@ -20,20 +20,20 @@ const Accordion: React.FC<AccordionProps> = ({ title, content, open }) => {
     return (
         <div className="border-b border-gray-secondary">
             <button
-                className="flex justify-between items-center py-3 px-3 w-full text-blue-main text-left font-semibold text-base bg-transparent hover:bg-gray focus:outline-none"
+                className="transition-all duration-500 flex justify-between items-center py-3 px-3 w-full text-blue-main text-left font-semibold text-base bg-transparent hover:bg-gray focus:outline-none"
                 onClick={toggleAccordion}>
                 <span>{title}</span>
                 <span>
                     {isOpen ? (
                         <Image
-                            src={'/arrowOpen.svg'}
+                            src={"/arrowOpen.svg"}
                             alt=""
                             width={12}
                             height={12}
                             className="rotate-180"
                         />
                     ) : (
-                        <Image src={'/arrowOpen.svg'} alt="" width={12} height={12} />
+                        <Image src={"/arrowOpen.svg"} alt="" width={12} height={12} />
                     )}
                 </span>
             </button>

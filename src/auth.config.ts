@@ -1,9 +1,10 @@
-import Google from 'next-auth/providers/google';
-import Credentials from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
-import type { NextAuthConfig } from 'next-auth';
-import { LoginSchema } from './schemas';
-import { userService } from './service/user.service';
+import Google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
+// import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
+import type { NextAuthConfig } from "next-auth";
+import { LoginSchema } from "./schemas";
+import { userService } from "./service/user.service";
 
 export default {
     providers: [
@@ -16,7 +17,7 @@ export default {
                 const validatedFields = LoginSchema.safeParse(credentials);
 
                 if (!validatedFields.success) {
-                    throw new Error('Invalid input data');
+                    throw new Error("Invalid input data");
                 }
 
                 const { email, password } = validatedFields.data;
@@ -26,7 +27,7 @@ export default {
                     const user = await userService.getUserByEmail(email);
 
                     if (!user || !user.password) {
-                        throw new Error('No user found with the email');
+                        throw new Error("No user found with the email");
                     }
 
                     // Compare password
@@ -39,13 +40,13 @@ export default {
                     return null;
                 } catch (error) {
                     console.error(error);
-                    throw new Error('Authentication failed');
+                    throw new Error("Authentication failed");
                 }
             },
         }),
     ],
     pages: {
-        signIn: '/auth/signin',
+        signIn: "/auth/signin",
         // signIn: '/auth/login',
         // другие страницы
     },

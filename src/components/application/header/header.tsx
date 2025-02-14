@@ -85,7 +85,7 @@ const Header: React.FC<Props> = ({
             <div className="flex flex-grow items-center justify-between gap-4">
                 <Link href={'/'} className="flex items-center p-2 pl-0 gap-2">
                     <Image className="" width={15} height={15} src={'/logo-blue.png'} alt="logo" />
-                    <p className="text-blue-main text-sm font-semibold">карта жкх</p>
+                    <p className="text-blue-main text-sm font-semibold">Интерактивая карта</p>
                 </Link>
                 <div className="flex items-center gap-4">
                     <InputSearch
