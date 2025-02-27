@@ -11,6 +11,11 @@ This is a project for managing real estate objects. Follow to [more](https://www
 - [Prisma](https://www.prisma.io/)
 ##### DB:
 - [PostgreSQL](https://www.postgresql.org/)
+##### Tools:
+- [YandexMapsAPI](https://yandex.ru/maps-api/products/js-api)
+- [Google OAuth Authentication](https://developers.google.com/identity/protocols/oauth2)
+- [Cloudinary](https://cloudinary.com/)
+- [Authjs](https://authjs.dev/)
 
 ## Getting Started
 
