@@ -1,4 +1,4 @@
-This is a project for managing real estate objects. Follow to [more](https://www.youtube.com/watch?v=vqnLexJWgHw)
+This is a project for managing real estate objects. Maps v2 Follow to [more](https://www.youtube.com/watch?v=vqnLexJWgHw)
 
 ## Stack
 ##### frontend:
